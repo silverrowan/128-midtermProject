@@ -1,5 +1,5 @@
 "use strict";
-
+// #add baseUsers array of objects & freeze
 const baseUsers = [
     { "uid": "03LHN" }, 
     { "uid": "0JDHD" }, 
@@ -15,31 +15,12 @@ const baseUsers = [
     { "uid": "RQPSD" }, 
     { "uid": "RYBIX" }, 
     { "uid": "VIF0S" }, 
-    { "uid": "YCQPM" }];
+    { "uid": "YCQPM" }
+];
 Object.freeze(baseUsers);
+// #endadd
 
-/* uid
-firstName
-lastName
-email
-username
-userRole -- 3x roles ok
-profileImage */
-
-//Setting up User Object
-// class User {
-//     constructor(uid, firstName, lastName, email, username, userRole, profileImage) {
-//         this._uid = uid;
-//         this._firstName = firstName;
-//         this._lastName = lastName;
-//         this._email = email;
-//         this._username = username;
-//         this._userRole = userRole;
-//         this._profileImage = profileImage;
-//     }
-// }
-
-//enter information into user objects
+// #region enter information into user objects
 //available roles are: admin, mod, and user, with user having the lowest priviledges
 for (let i = 0; i < baseUsers.length; i++) {
     let username = `user${i}`;
@@ -52,7 +33,9 @@ for (let i = 0; i < baseUsers.length; i++) {
     baseUsers[i].profileImage = `images/${username}`;
     // username = baseUsers[i]; this didn't allow me to use username as objName
 }
+// #endregion
 
+// #region change user roles of 3 users
 //Change 1 user's role to "admin"
 baseUsers[0].userRole = "admin";
 // baseUsers.user0.userRole = "admin";
@@ -62,3 +45,47 @@ baseUsers[1].userRole = "mod";
 baseUsers[2].userRole = "mod";
 
 console.log(baseUsers);
+// #endregion
+
+// #region setup login on load
+const loadLoginBtn = document.querySelector("#loginBtn");
+const userLogin = () => loadLoginBtn.click();
+userLogin();
+// #endregion
+
+// #region setup login form validation
+//get login form input boxes & values
+const usernameIn = document.querySelector("#userNameIn");
+const userPassIn = document.querySelector("#userPasswordIn");
+
+let activeUser = usernameIn.value;
+let activeUserPass = userPassIn.value;
+
+// login function and listener
+const checkUserPass = () => 0;
+    // activeUser = 
+    
+    // baseUsers.filter(baseUsers.username == 'username entry');
+    // if (activeUser) {
+    //     activeUserPass = 
+    //     if ( 'password entry' == activeUser.uid ) {}
+        
+    //     }
+
+
+// #endregion
+// #region Get login form buttons & add listenters
+const enterLogin = document.querySelector("#loginModalButton");
+const cancelLogin = document.querySelector("#loginCancelButton")
+enterLogin.addEventListener("click", checkUserPass);
+// cancelLogin.addEventListener("click", userLogin);
+// not working, for now just load empty page
+
+
+
+const seeUsers = () => {
+
+    return ;
+};
+
+// #endsetup
