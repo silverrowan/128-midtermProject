@@ -59,6 +59,7 @@ const usernameIn = document.querySelector("#userNameIn");
 const userPassIn = document.querySelector("#userPasswordIn");
 const loginErrorMsg = document.querySelector("#incorrect");
 const showErrorMsg = () => loginErrorMsg.classList.remove('hidden');
+const hideErrorMsg = () => loginErrorMsg.classList.add('hidden');
 
 // login function and listener
 const checkUserPass = () => {
@@ -66,8 +67,9 @@ const checkUserPass = () => {
     let userPassInput = userPassIn.value;
 
     for (let i = 0; i < baseUsers.length ; i++)
-        if (baseUsers[i].username === userNameInput) {
-            if (baseUsers[i].uid === userPassInput) {
+        if (baseUsers[i].username == userNameInput) {
+            if (baseUsers[i].uid == userPassInput) {
+                hideErrorMsg();
                 // ALLOW LOGIN; LOAD IMAGES
                 // seeUsers(userNameInput)
             } else { showErrorMsg(); }
