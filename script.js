@@ -57,23 +57,24 @@ userLogin();
 //get login form input boxes & values
 const usernameIn = document.querySelector("#userNameIn");
 const userPassIn = document.querySelector("#userPasswordIn");
-
-let activeUser = usernameIn.value;
-let activeUserPass = userPassIn.value;
+const loginErrorMsg = document.querySelector("#incorrect");
+const showErrorMsg = () => loginErrorMsg.classList.remove('hidden');
 
 // login function and listener
-const checkUserPass = () => 0;
-    // activeUser = 
-    
-    // baseUsers.filter(baseUsers.username == 'username entry');
-    // if (activeUser) {
-    //     activeUserPass = 
-    //     if ( 'password entry' == activeUser.uid ) {}
-        
-    //     }
+const checkUserPass = () => {
+    let userNameInput = usernameIn.value;
+    let userPassInput = userPassIn.value;
 
-
+    for (let i = 0; i < baseUsers.length ; i++)
+        if (baseUsers[i].username === userNameInput) {
+            if (baseUsers[i].uid === userPassInput) {
+                // ALLOW LOGIN; LOAD IMAGES
+                // seeUsers(userNameInput)
+            } else { showErrorMsg(); }
+        } else { showErrorMsg(); }
+}
 // #endregion
+
 // #region Get login form buttons & add listenters
 const enterLogin = document.querySelector("#loginModalButton");
 const cancelLogin = document.querySelector("#loginCancelButton")
@@ -82,9 +83,15 @@ enterLogin.addEventListener("click", checkUserPass);
 // not working, for now just load empty page
 
 
+const seeUsers = (userArray, activeuser) => {
+    // if user.role matches "admin" or "mod" OR user.name = activeuser
+    // then add user
+    // if active user highlight in some way
+    // else skip
+}
 
-const seeUsers = () => {
-
+const makeUserCard = (username) => {
+    
     return ;
 };
 

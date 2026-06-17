@@ -26,12 +26,13 @@
 		<!-- Modal Header (close and title) -->
 		<div class="modal-header">
         	<h1 class="modal-title fs-5" id="staticBackdropLabel">Login</h1>
-        	<!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
+        	<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       	</div>
 	  	<!-- Modal Body - Login Form -->
       	<div class="modal-body">
 			<form>
 			<div class="mb-3">
+				<div id="incorrect" class="form-text text-danger h5 hidden">Username or password is incorrect.</div>
 				<label for="userNameIn" class="form-label">Username</label>
 				<input type="text" class="form-control" id="userNameIn" aria-describedby="username">
 			</div>
