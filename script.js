@@ -116,15 +116,15 @@ const showUsers = (userArray, activeUserIndex) => {
     // else skip
 
     if (checkIfAdmin(userArray, activeUserIndex)) { // show admin/mods everyone
-            showAllUsers(userArray);
+            showAllUsers(userArray, activeUserIndex);
     } else { 
         for ( let i = 0 ; i < userArray.length ; i++) {
             if ( i == activeUserIndex ) { // show self (not needed when user is admin/mod)
-                makeCard(userArray, i);
+                makeCard(userArray, i, activeUserIndex);
             } else if ( checkIfAdmin(userArray, i) ) { // if user being checked is admin/mod
                 //check that mod/admin has not hidden themselves from the active user if not, then display
                 if ( !checkHidden(userArray, activeUserIndex, i) ) { 
-                makeCard(userArray, i); 
+                makeCard(userArray, i, activeUserIndex); 
                 }
             }
         }
@@ -161,28 +161,33 @@ const checkHidden = (userArray, activeUserIndex, adminIndex) => {
 }
 
 const makeCard = (userArray, cardIndex, selfIndex) => {
-    let cardUser = userArray[cardIndex];
-    // <img src="..." class="card-img-top" alt="profile picture of ${cardUser.username}"></img>
-    let output = `<div class="card">
-    <div class="card-body">
-        <h5 class="card-title">${cardUser.username}</h5>
-        <p class="card-text">
-        Full Name: ${cardUser.firstName} ${cardUser.lastName}<br>
-        email: ${cardUser.email}<br>
-        role: ${cardUser.userRole}
-        </p>
-        <!-- <a href="#" class="btn btn-primary">Go somewhere</a> -->
-    </div>
-    </div>`
-    if (checkIfAdmin(userArray, cardIndex) && userIndex == selfIndex) {
-        output += `<br>Hidden from users:`;
-        for ( let i = 0 ; i < cardUser.hideFrom.length ; i++) {
-            hiddenFromUserIndex = cardUser.hideFrom[i];
-            output += userArray[hiddenFromUserIndex].username;
-            if (i != cardUser.hideFrom.length - 1) { output += ', '; }
+    let userCard = userArray[cardIndex];
+    // <img src="..." class="card-img-top" alt="profile picture of ${userCard.username}"></img>
+    let hiddenString ="";
+    let showHiddenFrom = cardIndex == selfIndex && checkIfAdmin(userArray, cardIndex);
+    // let cardIsAdmin = 
+    // let selfIsAdmin = checkIfAdmin(userArray, selfIndex);
+    if (showHiddenFrom) {
+        for ( let i = 0 ; i < userCard.hideFrom.length ; i++) {
+            hiddenFromUserIndex = userCard.hideFrom[i];
+            hiddenString += userArray[hiddenFromUserIndex].username;
+            if (i != userCard.hideFrom.length - 1) { output += ', '; }
         }
     }
+    let output = `<div class="card">
+        <div class="card-body">
+        <h5 class="card-title">${userCard.username}</h5>
+        <p class="card-text">
+        Full Name: ${userCard.firstName} ${userCard.lastName}<br>
+        email: ${userCard.email}<br>
+        role: ${userCard.userRole}<br>`
+
+    if ( showHiddenFrom ) {
+        output += `Hidden from users: ${hiddenString}`;
+    }
+    output += `</p></div></div>`
+        // <!-- <a href="#" class="btn btn-primary">Go somewhere</a> -->
     return output;
-};
+}
 
 // #endsetup
