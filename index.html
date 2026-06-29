@@ -20,19 +20,19 @@
 </button>
 
 <!-- Modal -->
-<div class="modal fade" id="loginModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+<div class="modal fade" id="loginModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="LoginTitle" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
 		<!-- Modal Header (close and title) -->
 		<div class="modal-header">
-        	<h1 class="modal-title fs-5" id="staticBackdropLabel">Login</h1>
+        	<h1 class="modal-title fs-5" id="LoginTitle">Login</h1>
         	<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       	</div>
 	  	<!-- Modal Body - Login Form -->
       	<div class="modal-body">
 			<form>
 			<div class="mb-3">
-				<div id="incorrect" class="form-text text-danger h5 hidden">Username or password is incorrect.</div>
+				<div id="incorrect" class="form-text text-danger h5 hidden" aria-hidden="true">Username or password is incorrect.</div>
 				<label for="userNameIn" class="form-label">Username</label>
 				<input type="text" class="form-control" id="userNameIn" aria-describedby="username">
 			</div>

@@ -47,19 +47,36 @@ baseUsers[2].userRole = "mod";
 console.log(baseUsers);
 // #endregion
 
-// #region setup login on load
+// #region setup login on load, set up references
 const loadLoginBtn = document.querySelector("#loginBtn");
 const userLogin = () => loadLoginBtn.click();
 userLogin();
-// #endregion
-
-// #region setup login form validation
 //get login form input boxes & values
 const usernameIn = document.querySelector("#userNameIn");
 const userPassIn = document.querySelector("#userPasswordIn");
 const loginErrorMsg = document.querySelector("#incorrect");
-const showErrorMsg = () => loginErrorMsg.classList.remove('hidden');
-const hideErrorMsg = () => loginErrorMsg.classList.add('hidden');
+//reference modal itself
+const loginModal = document.querySelector('#loginModal');
+const loginModalBS = bootstrap.Modal.getInstance(loginModal);
+//modal methods
+// const focusModal = () => { usernameIn.focus(); }
+const closeModal = () => { loginModalBS.hide(); }
+// focusModal(); // not working currently
+// #endregion
+
+// #region setup login form validation
+
+
+
+const showErrorMsg = () => {
+    loginErrorMsg.classList.remove('hidden');
+    loginErrorMsg.ariaHidden=false;
+}
+const hideErrorMsg = () => {
+    loginErrorMsg.classList.add('hidden');
+    loginErrorMsg.ariaHidden=true;
+}
+
 
 // login function and listener
 const checkUserPass = () => {
@@ -70,9 +87,10 @@ const checkUserPass = () => {
         if (baseUsers[i].username == userNameInput) {
             if (baseUsers[i].uid == userPassInput) {
                 hideErrorMsg();
-                // ALLOW LOGIN; LOAD IMAGES
-                // seeUsers(userNameInput)
+                closeModal();
+                seeUsers(baseUsers, userNameInput);
             } else { showErrorMsg(); }
+            break;
         } else { showErrorMsg(); }
 }
 // #endregion
@@ -83,6 +101,7 @@ const cancelLogin = document.querySelector("#loginCancelButton")
 enterLogin.addEventListener("click", checkUserPass);
 // cancelLogin.addEventListener("click", userLogin);
 // not working, for now just load empty page
+
 
 
 const seeUsers = (userArray, activeuser) => {
