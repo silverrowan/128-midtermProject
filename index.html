@@ -14,19 +14,15 @@
 	<script defer src="script.js"></script>
 </head>
 <body>
-<!-- Button trigger modal -->
-<button id="loginBtn" class="btn xhidden" type="button" data-bs-toggle="modal" data-bs-target="#loginModal">
-  Login
-</button>
 
 <!-- Modal -->
-<div class="modal fade" id="loginModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="LoginTitle" aria-hidden="true">
+<div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="LoginTitle" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
 		<!-- Modal Header (close and title) -->
 		<div class="modal-header">
         	<h1 class="modal-title fs-5" id="LoginTitle">Login</h1>
-        	<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        	<button type="button" class="btn-close" aria-label="Close"></button>
       	</div>
 	  	<!-- Modal Body - Login Form -->
       	<div class="modal-body">
@@ -43,7 +39,7 @@
       	</div>
 	  	<!-- Modal Footer (Buttons) -->
       	<div class="modal-footer">
-        	<button type="button" class="btn btn-outline-secondary " id="loginCancelButton" data-bs-dismiss="modal">Cancel</button>
+        	<button type="button" class="btn btn-outline-secondary " id="loginCancelButton">Cancel</button>
         	<button type="button" class="btn btn-success" id="loginModalButton">Login</button>
       	</div>
     </div>

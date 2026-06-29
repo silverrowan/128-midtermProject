@@ -48,25 +48,22 @@ console.log(baseUsers);
 // #endregion
 
 // #region setup login on load, set up references
-const loadLoginBtn = document.querySelector("#loginBtn");
-const userLogin = () => loadLoginBtn.click();
-userLogin();
+//reference & create modal itself
+const loginModal = document.querySelector('#loginModal');
+const loginModalBS = bootstrap.Modal.getOrCreateInstance(loginModal);
 //get login form input boxes & values
 const usernameIn = document.querySelector("#userNameIn");
 const userPassIn = document.querySelector("#userPasswordIn");
 const loginErrorMsg = document.querySelector("#incorrect");
-//reference modal itself
-const loginModal = document.querySelector('#loginModal');
-const loginModalBS = bootstrap.Modal.getInstance(loginModal);
+
+loginModalBS.show();
 //modal methods
-// const focusModal = () => { usernameIn.focus(); }
 const closeModal = () => { loginModalBS.hide(); }
+// const focusModal = () => { usernameIn.focus(); }
 // focusModal(); // not working currently
 // #endregion
 
 // #region setup login form validation
-
-
 
 const showErrorMsg = () => {
     loginErrorMsg.classList.remove('hidden');
@@ -76,7 +73,6 @@ const hideErrorMsg = () => {
     loginErrorMsg.classList.add('hidden');
     loginErrorMsg.ariaHidden=true;
 }
-
 
 // login function and listener
 const checkUserPass = () => {
