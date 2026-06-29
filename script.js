@@ -1,7 +1,7 @@
 "use strict";
 // #add baseUsers array of objects & freeze
 const baseUsers = [
-    { "uid": "03LHN" }, 
+    { "uid": "aaa" }, //03LHN
     { "uid": "0JDHD" }, 
     { "uid": "65EO3" }, 
     { "uid": "8D8WN" }, 
@@ -36,13 +36,18 @@ for (let i = 0; i < baseUsers.length; i++) {
 // #endregion
 
 // #region change user roles of 3 users
+const makeAdmin = (userArray, adminUserIndex, adminType) => {
+    userArray[adminUserIndex].userRole = adminType;
+    userArray[adminUserIndex].hideFrom = [];
+}
+
 //Change 1 user's role to "admin"
-baseUsers[0].userRole = "admin";
+makeAdmin(baseUsers, 0, "admin");
 // baseUsers.user0.userRole = "admin";
 
 //Change 2 user's role to "mod" (moderator)
-baseUsers[1].userRole = "mod";
-baseUsers[2].userRole = "mod";
+makeAdmin(baseUsers, 1, "mod");
+makeAdmin(baseUsers, 2, "mod");
 
 console.log(baseUsers);
 // #endregion
@@ -74,20 +79,24 @@ const hideErrorMsg = () => {
     loginErrorMsg.ariaHidden=true;
 }
 
-// login function and listener
+// login function and listener; activeUserIndex
+
 const checkUserPass = () => {
     let userNameInput = usernameIn.value;
     let userPassInput = userPassIn.value;
 
-    for (let i = 0; i < baseUsers.length ; i++)
+    for (let i = 0; i < baseUsers.length ; i++) {
         if (baseUsers[i].username == userNameInput) {
             if (baseUsers[i].uid == userPassInput) {
+                // let activeUser = userNameInput;
+                let activeUserIndex = i;
                 hideErrorMsg();
                 closeModal();
-                seeUsers(baseUsers, userNameInput);
+                showUsers(baseUsers, activeUserIndex);
             } else { showErrorMsg(); }
             break;
         } else { showErrorMsg(); }
+    }
 }
 // #endregion
 
@@ -100,16 +109,80 @@ enterLogin.addEventListener("click", checkUserPass);
 
 
 
-const seeUsers = (userArray, activeuser) => {
+const showUsers = (userArray, activeUserIndex) => {
     // if user.role matches "admin" or "mod" OR user.name = activeuser
     // then add user
     // if active user highlight in some way
     // else skip
+
+    if (checkIfAdmin(userArray, activeUserIndex)) { // show admin/mods everyone
+            showAllUsers(userArray);
+    } else { 
+        for ( let i = 0 ; i < userArray.length ; i++) {
+            if ( i == activeUserIndex ) { // show self (not needed when user is admin/mod)
+                makeCard(userArray, i);
+            } else if ( checkIfAdmin(userArray, i) ) { // if user being checked is admin/mod
+                //check that mod/admin has not hidden themselves from the active user if not, then display
+                if ( !checkHidden(userArray, activeUserIndex, i) ) { 
+                makeCard(userArray, i); 
+                }
+            }
+        }
+    }
 }
 
-const makeUserCard = (username) => {
+const userDiv = document.querySelector("#userDiv");
+
+const showAllUsers = (userArray, selfIndex) => {
+    console.log(userArray);
     
-    return ;
+    for (let i = 0 ; i < userArray.length ; i++) {
+        // userDiv.innerHTML = `<p>testing</p>`;
+        userDiv.innerHTML += makeCard(userArray, i, selfIndex);
+    }
+}
+
+const checkIfAdmin = (userArray, userIndex) => {
+    let role = userArray[userIndex].userRole;
+    if ( role == "admin"  || role == "mod" ) { 
+        return true; 
+    } else { 
+        return false; 
+    }    
+}
+
+const checkHidden = (userArray, activeUserIndex, adminIndex) => {
+    let hideFrom = userArray[adminIndex].hideFrom;
+    let hidden = false;
+    for (let i = 0 ; i < hideFrom.length ; i++) {
+        if (hideFrom[i] == activeUserIndex) { hidden = true; }
+    }
+    return hidden;
+}
+
+const makeCard = (userArray, cardIndex, selfIndex) => {
+    let cardUser = userArray[cardIndex];
+    // <img src="..." class="card-img-top" alt="profile picture of ${cardUser.username}"></img>
+    let output = `<div class="card">
+    <div class="card-body">
+        <h5 class="card-title">${cardUser.username}</h5>
+        <p class="card-text">
+        Full Name: ${cardUser.firstName} ${cardUser.lastName}<br>
+        email: ${cardUser.email}<br>
+        role: ${cardUser.userRole}
+        </p>
+        <!-- <a href="#" class="btn btn-primary">Go somewhere</a> -->
+    </div>
+    </div>`
+    if (checkIfAdmin(userArray, cardIndex) && userIndex == selfIndex) {
+        output += `<br>Hidden from users:`;
+        for ( let i = 0 ; i < cardUser.hideFrom.length ; i++) {
+            hiddenFromUserIndex = cardUser.hideFrom[i];
+            output += userArray[hiddenFromUserIndex].username;
+            if (i != cardUser.hideFrom.length - 1) { output += ', '; }
+        }
+    }
+    return output;
 };
 
 // #endsetup
