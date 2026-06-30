@@ -1,0 +1,10 @@
+- [~] This project allows one of a set of hardcoded users to log into a site where they can see the information of other users and themselves.
+- [] The interface consistes of a menu bar with a "login" or "change User" button, depending on login state. 
+- [] A title reports the username of the currently logged in user.
+- [x] Which others users are shown is affected by the role of the active user, and if any of the admin users have elected to hide their information from this user. 
+- [x] Admin roles are highlighted with a green border and background for their information cards, while regular user cards have white backgrounds. 
+- [] All users will see bolded text for their own information card.
+- [] By default, regular users will see the information of all admin staff and themselves. Admin users will see everyone's information. 
+- [] Admin also have the ability to hide their information from specific users.
+- [] The login is protected from SQL injection by: ____________________________________________________
+
