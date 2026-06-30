@@ -2,20 +2,23 @@
     display: none !important;
 }
 
+.admin, .mod, .user {
+    border: 2px solid rgb(46, 94, 165);
+    border-radius: 8px;
+}
 .admin {
-    border: 2px, solid, rgb(14, 75, 14);
-    background-color: rgb(74, 153, 109);
+    border-color: rgb(14, 62, 134);
+    background-color: rgb(78, 131, 211);
 }
 
 .mod {
-    border: 2px, solid, rgb(27, 97, 27);
-    background-color: rgb(131, 197, 161);
+    background-color: rgb(175, 205, 230);
 }
 
 .self {
     font-weight: bold;
 }
 
-.user {
-    border: 2px, solid, rgb(82, 158, 135);
+hr {
+    border: 1px solid rgb(1, 78, 194);
 }

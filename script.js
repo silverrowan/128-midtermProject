@@ -30,7 +30,7 @@ for (let i = 0; i < baseUsers.length; i++) {
     baseUsers[i].lastName = "lName" + i;
     baseUsers[i].username = username;
     baseUsers[i].email = `${username}@email.com`;
-    baseUsers[i].profileImage = `images/${username}`;
+    baseUsers[i].profileImage = `images/${username}.png`;
 }
 
 //function to change a user's role
@@ -115,10 +115,11 @@ const makeCard = (userArray, cardIndex, selfIndex) => {
 
     //build card HTML
     //below portion is the same for all users
-    let output = `<div class ="col col-s-12 col-md-6 col-lg-4 col-xl-2 mb-3" >
+    let output = `<div class ="col col-s-12 col-md-6 col-lg-3 col-xl-2 mb-3" >
         <div class="card ${userCard.userRole} ${selfClass}">
+        <img src="${userCard.profileImage}" alt="profile picture of ${userCard.username}" class="card-img-top"></img>
         <div class="card-body">
-        <h5 class="card-title">${userCard.username}</h5>
+        <h5 class="card-title ${selfClass}">${userCard.username}</h5>
         <p class="card-text">
         Full Name: ${userCard.firstName} ${userCard.lastName}<br>
         email: ${userCard.email}<br>
@@ -129,7 +130,7 @@ const makeCard = (userArray, cardIndex, selfIndex) => {
         let isHidden = checkHidden(userArray, cardIndex, selfIndex);
         let buttonText, buttonClass; 
         isHidden ? buttonText = 'visible' : buttonText = 'hidden';
-        isHidden ? buttonClass = 'hideAdmin btn-warning' : buttonClass = 'showAdmin btn-success';
+        isHidden ? buttonClass = 'hideAdmin btn-warning' : buttonClass = 'showAdmin btn-primary';
 
         output += `<hr>Set my visiblity to ${userCard.username} to: <a href="#" 
             class="btn ${buttonClass}" id="btn-${userCard.username}" userRef="${cardIndex}">${buttonText}</a>`; }
@@ -164,7 +165,7 @@ const toggleAdminVisibility = (e) => {
     target.classList.toggle('hideAdmin');
     target.classList.toggle('btn-warning');
     target.classList.toggle('showAdmin');
-    target.classList.toggle('btn-success');
+    target.classList.toggle('btn-primary');
     if (target.outerText == 'hidden') { 
         target.outerText == 'visible';
         removeFromHidden(baseUsers, activeUserIndex, target.userRef);
