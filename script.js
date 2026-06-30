@@ -36,7 +36,7 @@ for (let i = 0; i < baseUsers.length; i++) {
 //function to change a user's role
 const makeAdmin = (userArray, adminUserIndex, adminType) => {
     userArray[adminUserIndex].userRole = adminType;
-    userArray[adminUserIndex].hideFrom = [];
+    userArray[adminUserIndex].isHidden = false;
 }
 
 //Change 1 user's role to "admin", 2 to "mod" (moderator)
@@ -62,14 +62,16 @@ const checkIfAdmin = (userArray, userIndex) => {
     }    
 }
 
-const checkHidden = (userArray, targetUserIndex, adminIndex) => {
-    let hideAdminFrom = userArray[adminIndex].hideFrom;
-    let hidden = false;
-    for (let i = 0 ; i < hideAdminFrom.length ; i++) {
-        if (hideAdminFrom[i] == targetUserIndex) { hidden = true; }
-    }
-    return hidden;
-}
+const checkIfSelf = (cardIndex, userIndex) => cardIndex == userIndex;
+
+// const checkHidden = (userArray, targetUserIndex, adminIndex) => {
+//     let hideAdminFrom = userArray[adminIndex].hideFrom;
+//     let hidden = false;
+//     for (let i = 0 ; i < hideAdminFrom.length ; i++) {
+//         if (hideAdminFrom[i] == targetUserIndex) { hidden = true; }
+//     }
+//     return hidden;
+// }
 
 //Display User Cards
 const showUsers = (userArray, activeUserIndex) => {
@@ -92,8 +94,8 @@ const showAllUsers = (userArray, selfIndex) => {
 const showAdmin = (userArray, activeUserIndex) => {
         for ( let i = 0 ; i < userArray.length ; i++) {
             if ( checkIfAdmin(userArray, i) && !checkHidden(userArray, activeUserIndex, i) ) { 
-                // check if the card is of an admin account and NOT hidden from the active user.
-                // if both true, then display. Will only activate one 'user' level accounts.
+                // check if the card is of an admin account and NOT hidden from users.
+                // if both true, then display. Will only activate on 'user' level accounts.
                 makeCard(userArray, i, activeUserIndex); 
                 }
         }
@@ -111,6 +113,8 @@ const makeCard = (userArray, cardIndex, selfIndex) => {
 
     let selfIsAdmin = checkIfAdmin(userArray, selfIndex);
     let cardIsAdmin = checkIfAdmin(userArray, cardIndex);
+    let cardIsSelf = checkIfSelf(cardIndex, selfIndex);
+    let isHidden = userArray[selfIndex].isHidden;
 
     //create & alter value of 'selfClass' based on if this card is for the active user
     let selfClass = '';
@@ -128,55 +132,57 @@ const makeCard = (userArray, cardIndex, selfIndex) => {
         email: ${userCard.email}<br>
         role: ${userCard.userRole}<br>`
 
-    //below portion is only visible by Admin users on NON admin user cards
-    if (selfIsAdmin && !cardIsAdmin) {
-        let isHidden = checkHidden(userArray, cardIndex, selfIndex);
+    //portion visible TO Admin on OWN user card
+    if (selfIsAdmin && cardIsSelf) {
         let buttonText, buttonClass; 
-        isHidden ? buttonText = 'visible' : buttonText = 'hidden';
+        isHidden ? buttonText = 'show' : buttonText = 'hide';
         isHidden ? buttonClass = 'hideAdmin btn-warning' : buttonClass = 'showAdmin btn-primary';
+        output += `<hr>
+            hide my profile <a href="#" 
+            class="btn ${buttonClass}" id="btn-hide" userRef="${cardIndex}">${buttonText}</a>`; 
+        }
 
-        output += `<hr>Set my visiblity to ${userCard.username} to: <a href="#" 
-            class="btn ${buttonClass}" id="btn-${userCard.username}" userRef="${cardIndex}">${buttonText}</a>`; }
-
-        // below portion is the same for all users
+    // below portion is the same for all users
     output += `</p></div></div></div>`
         // <!-- <a href="#" class="btn btn-primary">Go somewhere</a> -->
     return output;
 }
 
-const removeFromHidden = (userArray, adminIndex, targetUserIndex) => {
-    let removeTarget;
-    let hideAdminFrom = userArray[adminIndex].hideFrom;
-    for (let i = 0 ; i < hideAdminFrom.length ; i++) {
-        if (hideAdminFrom[i] == targetUserIndex) { 
-            removeTarget = i; }
-    }
-    return hideAdminFrom.pop(removeTarget);
-}
+// const removeFromHidden = (userArray, adminIndex, targetUserIndex) => {
+//     let removeTarget;
+//     let hideAdminFrom = userArray[adminIndex].hideFrom;
+//     for (let i = 0 ; i < hideAdminFrom.length ; i++) {
+//         if (hideAdminFrom[i] == targetUserIndex) { 
+//             removeTarget = i; }
+//     }
+//     return hideAdminFrom.pop(removeTarget);
+// }
 
-const addToHidden = () => {
-    userArray[activeUserIndex].hideFrom.push(targetIndex);
-}
+// const addToHidden = () => {
+//     userArray[activeUserIndex].hideFrom.push(targetIndex);
+// }
 
 const toggleAdminVisibility = (e) => {
     let target = e.target;
     console.log(e);
     console.log(target);
-    console.log(target.userRef);
-    console.log(baseUsers[activeUserIndex].hideFrom);
+    let buttonUserIndex = target.attributes.userref.value;
+    console.log(buttonUserIndex);
     
-    target.classList.toggle('hideAdmin');
-    target.classList.toggle('btn-warning');
-    target.classList.toggle('showAdmin');
-    target.classList.toggle('btn-primary');
-    if (target.innerText == 'hidden') { 
-        target.innerText = 'visible';
-        removeFromHidden(baseUsers, activeUserIndex, target.userRef);
-     }
-    else if (target.innerText == 'visble') { 
-        target.innerText = 'hidden'; 
-        addToHidden();
-    }   
+    let adminIsHidden = baseUsers[buttonUserIndex].isHidden;
+    console.log(adminIsHidden);
+    
+    if (adminIsHidden == false) {
+        adminIsHidden = true;
+        target.innerText = 'show';
+        target.classList.add('hideAdmin', 'btn-warning');
+        target.classList.remove('showAdmin', 'btn-primary');
+    } else {
+        adminIsHidden = false;
+        target.innerText = 'hide';
+        target.classList.remove('hideAdmin', 'btn-warning');
+        target.classList.add('showAdmin', 'btn-primary');        
+    }
 }
 
 
