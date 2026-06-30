@@ -48,6 +48,20 @@ makeAdmin(baseUsers, 2, "mod");
 // get div to contain cards
 const userDiv = document.querySelector("#userDiv");
 
+// #toggle login/change user menu button by login status
+// note not using aria-hidden = "true" as apparently shouldn't be used 
+// with diaplay:none, which is how the hiding elements is implemented here
+const navLoginButton = document.querySelector("#navLoginButton");
+const navChangeUserButton = document.querySelector("#navChangeUserButton");
+
+if (activeUserIndex == null) {
+    navLoginButton.className = "btn btn-primary";
+    navChangeUserButton.className = "btn btn-primary hidden";
+} else {
+    navLoginButton.className = "btn btn-primary hidden";
+    navChangeUserButton.className = "btn btn-primary";
+}
+
 
 // #region functions: showUsers(), showAllUsers(), showAdmin(), showSelf(), checkIfAdmin(), checkHidden()
 // checking functions
@@ -99,6 +113,7 @@ const showAdmin = (userArray, activeUserIndex) => {
 
 const showSelf = (userArray, activeUserIndex) => { makeCard(userArray, activeUserIndex, activeUserIndex); }
 
+// #endregion
 
 //build card & visibility button functions: makeCard(), toggleAdminVisibility(), removeFromHidden(), addToHidden()
 // build card HTML
