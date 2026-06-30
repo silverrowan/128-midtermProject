@@ -48,19 +48,7 @@ makeAdmin(baseUsers, 2, "mod");
 // get div to contain cards
 const userDiv = document.querySelector("#userDiv");
 
-// #toggle login/change user menu button by login status
-// note not using aria-hidden = "true" as apparently shouldn't be used 
-// with diaplay:none, which is how the hiding elements is implemented here
-const navLoginButton = document.querySelector("#navLoginButton");
-const navChangeUserButton = document.querySelector("#navChangeUserButton");
 
-if (activeUserIndex == null) {
-    navLoginButton.className = "btn btn-primary";
-    navChangeUserButton.className = "btn btn-primary hidden";
-} else {
-    navLoginButton.className = "btn btn-primary hidden";
-    navChangeUserButton.className = "btn btn-primary";
-}
 
 
 // #region functions: showUsers(), showAllUsers(), showAdmin(), showSelf(), checkIfAdmin(), checkHidden()
@@ -205,3 +193,17 @@ showUsers(baseUsers, activeUserIndex);
 
 //apply listener to container DIV; bubbling will allow individual button differentiation
 userDiv.addEventListener('click', (e) => toggleAdminVisibility(e) );
+
+// #toggle login/change user menu button by login status
+// note not using aria-hidden = "true" as apparently shouldn't be used 
+// with diaplay:none, which is how the hiding elements is implemented here
+const navLoginButton = document.querySelector("#navLoginButton");
+const navChangeUserButton = document.querySelector("#navChangeUserButton");
+
+if (activeUserIndex == null) {
+    navLoginButton.className = "btn btn-primary";
+    navChangeUserButton.className = "btn btn-primary hidden";
+} else {
+    navLoginButton.className = "btn btn-primary hidden";
+    navChangeUserButton.className = "btn btn-primary";
+}
