@@ -79,31 +79,6 @@ makeAdmin(baseUsers, 1, "mod");
 makeAdmin(baseUsers, 2, "mod");
 // #endregion
 
-// #region setup navbar
-// hide (or not) login/change user menu button visibility
-// note not using aria-hidden = "true" as apparently shouldn't be used 
-// with diaplay:none, which is how the hiding elements is implemented here
-const changeNavBtnToChgUser = () => {
-    navLoginButton.className = "btn btn-primary";
-    navChangeUserButton.className = "btn btn-primary hidden";
-    navLoginButton.innerText = "Change User"
-}
-
-const changeNavBtnToLogin = () => {
-    navLoginButton.className = "btn btn-primary hidden";
-    navChangeUserButton.className = "btn btn-primary";
-    navLoginButton.innerText = "Login"
-}
-
-const navLoginButton = document.querySelector("#navLoginButton");
-const navChangeUserButton = document.querySelector("#navChangeUserButton");
-
-navLoginButton.addEventListener('click', () => changeNavBtnToChgUser );
-navChangeUserButton.addEventListener('click', () => changeNavBtnToLogin );
-// #endregion
-
-// let activeUserIndex = '';
-
 // #region login modal functions: showErrorMsg(), hideErrorMsg(), checkUserPass()
 
 const showErrorMsg = () => {
@@ -122,8 +97,8 @@ const checkUserPass = () => {
             if (baseUsers[i].uid == userPassIn.value) {  
                 hideErrorMsg();
                 closeModal();
-                changeNavBtnToChgUser();
-                showUsers(baseUsers, i);
+                // changeNavBtnToChgUser();
+                showUsers(baseUsers, i); //note i = activeUser now, b/c both ifs were true
             } else { showErrorMsg(); }
             break;
         } else { showErrorMsg(); }
@@ -133,8 +108,8 @@ const checkUserPass = () => {
 
 // #region setup login modal, trigger modal on load
 // reference & create modal itself
-const loginModal = document.querySelector('#loginModal');
-const loginModalBS = bootstrap.Modal.getOrCreateInstance(loginModal);
+// const loginModal = document.querySelector('#loginModal');
+const loginModalBS = bootstrap.Modal.getOrCreateInstance( document.querySelector('#loginModal') );
 //get login form input boxes & values
 const usernameIn = document.querySelector("#userNameIn");
 const userPassIn = document.querySelector("#userPasswordIn");
@@ -148,10 +123,9 @@ const showLoginModal = () => loginModalBS.show();
 showLoginModal();
 
 const closeModal = () => { loginModalBS.hide(); }
-// #endregion
 
 //attach login modal login button listener
-enterLogin.addEventListener("click", () => checkUserPass () );
+enterLogin.addEventListener("click", () => checkUserPass() );
 cancelLogin.addEventListener("click", () => console.log("write function: clear user imput values, deny refresh") );
 // console.log(activeUserIndex);
 
@@ -159,6 +133,32 @@ cancelLogin.addEventListener("click", () => console.log("write function: clear u
 // not working, for now just load empty page
 
 // #endregion
+
+// #region setup navbar
+
+// const navLoginButton = document.querySelector("#navLoginButton");
+// const navChangeUserButton = document.querySelector("#navChangeUserButton");
+
+// // hide (or not) login/change user menu button visibility
+// // note not using aria-hidden = "true" as apparently shouldn't be used 
+// // with diaplay:none, which is how the hiding elements is implemented here
+// const changeNavBtnToChgUser = () => {
+//     navLoginButton.className = "btn btn-primary";
+//     navChangeUserButton.className = "btn btn-primary hidden";
+//     navLoginButton.innerText = "Change User"
+// }
+
+// const changeNavBtnToLogin = () => {
+//     navLoginButton.className = "btn btn-primary hidden";
+//     navChangeUserButton.className = "btn btn-primary";
+//     navLoginButton.innerText = "Login"
+// }
+
+// navLoginButton.addEventListener('click', () => changeNavBtnToChgUser );
+// navChangeUserButton.addEventListener('click', () => changeNavBtnToLogin );
+// #endregion
+
+// let activeUserIndex = '';
 
 const userDiv = document.querySelector("#userDiv");
 
@@ -185,6 +185,14 @@ const checkHidden = (userArray, userIndex) => userArray[userIndex].isHidden;
 const showUsers = (userArray, activeUserIndex) => {
     if (checkIfAdmin(userArray, activeUserIndex)) { // show admin/mods everyone (if logged in user is admin)
         showAllUsers(userArray, activeUserIndex);
+        let hideAdminBtn = document.querySelector("#btn-hide");
+        
+        
+        console.log(activeUserIndex);
+        console.log(baseUsers[activeUserIndex].isHidden);
+        
+        
+        hideAdminBtn.addEventListener('click', (e) => toggleAdminVisibility(e, activeUserIndex) )
     } else { 
         showAdmin(userArray, activeUserIndex);
         showSelf(userArray, activeUserIndex); //Not needed when active user is admin
@@ -254,18 +262,24 @@ const makeCard = (userArray, cardIndex, selfIndex) => {
 }
 
 //button function to change appearance of button and value of admin user .isHidden
-const toggleAdminVisibility = (e, userArray) => {
-    let target = e.target;
-    let buttonUserIndex = target.attributes.userref.value;
-    let adminIsHidden = userArray[buttonUserIndex].isHidden;
+const toggleAdminVisibility = (e, activeUserIndex) => {
+    let target = e.target
+    
+    console.log(activeUserIndex);
+    console.log(baseUsers[activeUserIndex]);
+    console.log(baseUsers[activeUserIndex].userRole);
+    console.log(baseUsers[activeUserIndex].isHidden);
+    
+
+    let adminIsHidden = baseUsers[activeUserIndex].isHidden;
     
     if (adminIsHidden == false) { //if self.isHidden initially false
-        userArray[buttonUserIndex].isHidden = true; //change value of self.isHidden to true; spotty functioning if use variable adminIsHidden
+        baseUsers[activeUserIndex].isHidden = true; //change value of self.isHidden to true; spotty functioning if use variable adminIsHidden
         target.innerText = 'show my profile'; //change button text
         target.classList.add('hideAdmin', 'btn-warning'); //add button classes & therefore styling
         target.classList.remove('showAdmin', 'btn-primary'); //remove button classes & therefore styling
     } else { //if self.isHidden initially true
-        userArray[buttonUserIndex].isHidden = false; //change value of self.isHidden to false; 
+        baseUsers[activeUserIndex].isHidden = false; //change value of self.isHidden to false; 
         target.innerText = 'hide my profile'; //change button text
         target.classList.remove('hideAdmin', 'btn-warning'); //add button classes & therefore styling
         target.classList.add('showAdmin', 'btn-primary'); //remove button classes & therefore styling
@@ -274,7 +288,7 @@ const toggleAdminVisibility = (e, userArray) => {
 // #endregion
 
 
-//apply listener to container DIV; bubbling will allow individual button differentiation
-//will error if anywhere else on div clicked
-userDiv.addEventListener('click', (e) => toggleAdminVisibility(e, baseUsers) );
+// //apply listener to container DIV; bubbling will allow individual button differentiation
+// //will error if anywhere else on div clicked
+// userDiv.addEventListener('click', );
 
