@@ -1,3 +1,7 @@
+body {
+    background-color: rgb(198, 212, 223);
+}
+
 .hidden {
     display: none !important;
 }
@@ -19,7 +23,7 @@ hr {
     border: 1px solid rgb(1, 78, 194);
 }
 
-.card {
+.card, nav, nav button {
     box-shadow: 0px 1rem 1.5rem -0.5rem hsla(217, 100%, 24%, 0.25);
 }
 
@@ -35,4 +39,16 @@ hr {
 
 .self {
     font-weight: bold;
+}
+
+nav {
+    background-color: rgb(175, 205, 230);
+    border-bottom: 1px solid rgb(46, 94, 165);
+}
+
+.btn-primary {
+    --bs-btn-bg: rgb(28, 100, 207);
+    --bs-btn-border-color: rgb(14, 62, 134);
+    --bs-btn-hover-bg: rgb(78, 131, 211);
+    --bs-btn-active-bg: rgb(175, 205, 230);
 }
