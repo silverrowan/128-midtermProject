@@ -169,12 +169,12 @@ const toggleAdminVisibility = (e) => {
     target.classList.toggle('btn-warning');
     target.classList.toggle('showAdmin');
     target.classList.toggle('btn-primary');
-    if (target.outerText == 'hidden') { 
-        target.outerText == 'visible';
+    if (target.innerText == 'hidden') { 
+        target.innerText = 'visible';
         removeFromHidden(baseUsers, activeUserIndex, target.userRef);
      }
-    else if (target.outerText == 'visble') { 
-        target.outerText == 'hidden'; 
+    else if (target.innerText == 'visble') { 
+        target.innerText = 'hidden'; 
         addToHidden();
     }   
 }
