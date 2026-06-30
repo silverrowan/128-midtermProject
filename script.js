@@ -20,6 +20,9 @@ const baseUsers = [
 Object.freeze(baseUsers);
 // #endadd
 
+//make easier to redirect to a different user list
+let userList = baseUsers;
+
 // #region enter information into user objects
 //available roles are: admin, mod, and user, with user having the lowest priviledges
 for (let i = 0; i < baseUsers.length; i++) {
@@ -74,6 +77,8 @@ const showUsers = (userArray, activeUserIndex) => {
     }
 }
 
+//Display User Cards
+// get div to contain cards
 const userDiv = document.querySelector("#userDiv");
 
 const showAllUsers = (userArray, selfIndex) => {
@@ -107,25 +112,37 @@ const makeCard = (userArray, cardIndex, selfIndex) => {
     let userCard = userArray[cardIndex];
     // <img src="..." class="card-img-top" alt="profile picture of ${userCard.username}"></img>
     let hiddenString ="";
-    let showHiddenFrom = cardIndex == selfIndex && checkIfAdmin(userArray, cardIndex);
-    // let cardIsAdmin = 
-    // let selfIsAdmin = checkIfAdmin(userArray, selfIndex);
-    if (showHiddenFrom) {
+    let selfIsAdmin = checkIfAdmin(userArray, selfIndex);
+    let cardIsAdmin = checkIfAdmin(userArray, cardIndex);
+    let showHiddenFrom = cardIndex == selfIndex && cardIsAdmin;
+
+    const checkIfHidden = () => { // checks if the logged in admin is hidden from a specific user
         for ( let i = 0 ; i < userCard.hideFrom.length ; i++) {
             hiddenFromUserIndex = userCard.hideFrom[i];
             hiddenString += userArray[hiddenFromUserIndex].username;
             if (i != userCard.hideFrom.length - 1) { output += ', '; }
         }
     }
-    let output = `<div class ="col col-xs-12 col-sm-6 col-lg-3 col-xl-2 mb-3" >
-        <div class="card ${userCard.userRole}">
+    // let cardIsAdmin = 
+    // let selfIsAdmin = checkIfAdmin(userArray, selfIndex);
+    // if (showHiddenFrom) {
+
+    // }
+    //if the this card is for the active user, apply the 'self' style class
+    let selfClass = '';
+    cardIndex == selfIndex ? selfClass = 'self' : selfClass = '';
+    //card HTML
+    let output = `<div class ="col col-s-12 col-md-6 col-lg-4 col-xl-2 mb-3" >
+        <div class="card ${userCard.userRole} ${selfClass}">
         <div class="card-body">
         <h5 class="card-title">${userCard.username}</h5>
         <p class="card-text">
         Full Name: ${userCard.firstName} ${userCard.lastName}<br>
         email: ${userCard.email}<br>
         role: ${userCard.userRole}<br>`
-
+    if (selfIsAdmin && !cardIsAdmin) {
+        // checkIfHidden();
+        output += `Set visiblity to ${userCard.username} to: <a href="#" class="btn btn-primary">hidden</a>` }
     if ( showHiddenFrom ) {
         output += `Hidden from users: ${hiddenString}`;
     }
@@ -133,6 +150,8 @@ const makeCard = (userArray, cardIndex, selfIndex) => {
         // <!-- <a href="#" class="btn btn-primary">Go somewhere</a> -->
     return output;
 }
+
+// button to hide/unhide from user
 
 // #endsetup
 
