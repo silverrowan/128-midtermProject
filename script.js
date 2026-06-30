@@ -193,13 +193,14 @@ const toggleAdminVisibility = (e, userArray) => {
 }
 // #endregion
 
-// #region call actions
+// #region build page
 
 // #region hardcode user; bypass login
 let activeUserIndex = 0;
 showUsers(baseUsers, activeUserIndex);
 
 //apply listener to container DIV; bubbling will allow individual button differentiation
+//will error if anywhere else on div clicked
 userDiv.addEventListener('click', (e) => toggleAdminVisibility(e, baseUsers) );
 
 // #toggle login/change user menu button by login status
