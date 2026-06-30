@@ -48,9 +48,6 @@ makeAdmin(baseUsers, 2, "mod");
 // get div to contain cards
 const userDiv = document.querySelector("#userDiv");
 
-
-
-
 // #region functions: showUsers(), showAllUsers(), showAdmin(), showSelf(), checkIfAdmin(), checkHidden()
 // checking functions
 const checkIfAdmin = (userArray, userIndex) => {
@@ -64,14 +61,8 @@ const checkIfAdmin = (userArray, userIndex) => {
 
 const checkIfSelf = (cardIndex, userIndex) => cardIndex == userIndex;
 
-// const checkHidden = (userArray, targetUserIndex, adminIndex) => {
-//     let hideAdminFrom = userArray[adminIndex].hideFrom;
-//     let hidden = false;
-//     for (let i = 0 ; i < hideAdminFrom.length ; i++) {
-//         if (hideAdminFrom[i] == targetUserIndex) { hidden = true; }
-//     }
-//     return hidden;
-// }
+const checkHidden = (userArray, userIndex) => userArray[userIndex].isHidden;
+
 
 //Display User Cards
 const showUsers = (userArray, activeUserIndex) => {
@@ -93,7 +84,7 @@ const showAllUsers = (userArray, selfIndex) => {
 
 const showAdmin = (userArray, activeUserIndex) => {
         for ( let i = 0 ; i < userArray.length ; i++) {
-            if ( checkIfAdmin(userArray, i) && !checkHidden(userArray, activeUserIndex, i) ) { 
+            if ( checkIfAdmin(userArray, i) && !checkHidden(userArray, i) ) { 
                 // check if the card is of an admin account and NOT hidden from users.
                 // if both true, then display. Will only activate on 'user' level accounts.
                 makeCard(userArray, i, activeUserIndex); 
@@ -138,8 +129,8 @@ const makeCard = (userArray, cardIndex, selfIndex) => {
         isHidden ? buttonText = 'show' : buttonText = 'hide';
         isHidden ? buttonClass = 'hideAdmin btn-warning' : buttonClass = 'showAdmin btn-primary';
         output += `<hr>
-            hide my profile <a href="#" 
-            class="btn ${buttonClass}" id="btn-hide" userRef="${cardIndex}">${buttonText}</a>`; 
+            <a href="#" 
+            class="btn ${buttonClass}" id="btn-hide" userRef="${cardIndex}">${buttonText}</a> my profile`; 
         }
 
     // below portion is the same for all users
@@ -162,15 +153,10 @@ const makeCard = (userArray, cardIndex, selfIndex) => {
 //     userArray[activeUserIndex].hideFrom.push(targetIndex);
 // }
 
-const toggleAdminVisibility = (e) => {
+const toggleAdminVisibility = (e, userArray) => {
     let target = e.target;
-    console.log(e);
-    console.log(target);
     let buttonUserIndex = target.attributes.userref.value;
-    console.log(buttonUserIndex);
-    
-    let adminIsHidden = baseUsers[buttonUserIndex].isHidden;
-    console.log(adminIsHidden);
+    let adminIsHidden = userArray[buttonUserIndex].isHidden;
     
     if (adminIsHidden == false) {
         adminIsHidden = true;
@@ -198,7 +184,7 @@ let activeUserIndex = 0;
 showUsers(baseUsers, activeUserIndex);
 
 //apply listener to container DIV; bubbling will allow individual button differentiation
-userDiv.addEventListener('click', (e) => toggleAdminVisibility(e) );
+userDiv.addEventListener('click', (e) => toggleAdminVisibility(e, baseUsers) );
 
 // #toggle login/change user menu button by login status
 // note not using aria-hidden = "true" as apparently shouldn't be used 
