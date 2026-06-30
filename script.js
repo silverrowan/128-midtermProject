@@ -107,30 +107,6 @@ enterLogin.addEventListener("click", checkUserPass);
 // cancelLogin.addEventListener("click", userLogin);
 // not working, for now just load empty page
 
-
-
-const showUsers = (userArray, activeUserIndex) => {
-    // if user.role matches "admin" or "mod" OR user.name = activeuser
-    // then add user
-    // if active user highlight in some way
-    // else skip
-
-    if (checkIfAdmin(userArray, activeUserIndex)) { // show admin/mods everyone
-            showAllUsers(userArray, activeUserIndex);
-    } else { 
-        for ( let i = 0 ; i < userArray.length ; i++) {
-            if ( i == activeUserIndex ) { // show self (not needed when user is admin/mod)
-                makeCard(userArray, i, activeUserIndex);
-            } else if ( checkIfAdmin(userArray, i) ) { // if user being checked is admin/mod
-                //check that mod/admin has not hidden themselves from the active user if not, then display
-                if ( !checkHidden(userArray, activeUserIndex, i) ) { 
-                makeCard(userArray, i, activeUserIndex); 
-                }
-            }
-        }
-    }
-}
-
 const userDiv = document.querySelector("#userDiv");
 
 const showAllUsers = (userArray, selfIndex) => {
