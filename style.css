@@ -15,10 +15,24 @@
     background-color: rgb(175, 205, 230);
 }
 
-.self {
-    font-weight: bold;
-}
-
 hr {
     border: 1px solid rgb(1, 78, 194);
+}
+
+.card {
+    box-shadow: 0px 1rem 1.5rem -0.5rem hsla(217, 100%, 24%, 0.25);
+}
+
+/* self - card w glow effect */
+.card.self {
+    box-shadow: 
+    /* actually a glow */
+    0px 0px 15px rgb(16, 155, 235,0.5),
+    /* same shadow as other cards */
+    0px 1rem 1.5rem -0.5rem hsla(217, 100%, 24%, 0.25);
+
+}
+
+.self {
+    font-weight: bold;
 }
