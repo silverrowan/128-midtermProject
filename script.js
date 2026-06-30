@@ -17,7 +17,7 @@ const baseUsers = [
     { "uid": "VIF0S" }, 
     { "uid": "YCQPM" }
 ];
-Object.freeze(baseUsers);
+Object.freeze(baseUsers); //note this blocks makeNewUserObj
 // #endadd
 
 // #region enter user object information; includes function: makeAdmin()
@@ -39,6 +39,13 @@ const makeAdmin = (userArray, adminUserIndex, adminType) => {
     userArray[adminUserIndex].isHidden = false;
 }
 
+// Create Default Users (to match objects in baseUsers array)
+updateAllUsersAutoValues(baseUsers);
+
+// give users real names etc
+// updateUserName(baseUsers, i, firstName, lastName );
+
+
 //Change 1 user's role to "admin", 2 to "mod" (moderator)
 makeAdmin(baseUsers, 0, "admin");
 makeAdmin(baseUsers, 1, "mod");
@@ -48,8 +55,8 @@ makeAdmin(baseUsers, 2, "mod");
 // get div to contain cards
 const userDiv = document.querySelector("#userDiv");
 
-// #region functions: showUsers(), showAllUsers(), showAdmin(), showSelf(), checkIfAdmin(), checkHidden()
-// checking functions
+// #region check if functions: checkIfAdmin(), checkIfSelf(), checkHidden()
+// checking if passed in index is of an admin user
 const checkIfAdmin = (userArray, userIndex) => {
     let role = userArray[userIndex].userRole;
     if ( role == "admin"  || role == "mod" ) { 
@@ -59,53 +66,53 @@ const checkIfAdmin = (userArray, userIndex) => {
     }    
 }
 
+// check if passed in indexes match; used to check if a card is of the active user
 const checkIfSelf = (cardIndex, userIndex) => cardIndex == userIndex;
 
+// check if passed in userindex has .isHidden = true
 const checkHidden = (userArray, userIndex) => userArray[userIndex].isHidden;
+// #endregion
 
-
+// #region who to display functions: showUsers(), showAllUsers(), showAdmin(), showSelf()
 //Display User Cards
 const showUsers = (userArray, activeUserIndex) => {
     if (checkIfAdmin(userArray, activeUserIndex)) { // show admin/mods everyone (if logged in user is admin)
-            showAllUsers(userArray, activeUserIndex);
+        showAllUsers(userArray, activeUserIndex);
     } else { 
         showAdmin(userArray, activeUserIndex);
         showSelf(userArray, activeUserIndex); //Not needed when active user is admin
     }
 }
 
-const showAllUsers = (userArray, selfIndex) => {
-    console.log(userArray);
-    
+const showAllUsers = (userArray, selfIndex) => { 
     for (let i = 0 ; i < userArray.length ; i++) {
         userDiv.innerHTML += makeCard(userArray, i, selfIndex);
     }
 }
 
 const showAdmin = (userArray, activeUserIndex) => {
-        for ( let i = 0 ; i < userArray.length ; i++) {
-            if ( checkIfAdmin(userArray, i) && !checkHidden(userArray, i) ) { 
-                // check if the card is of an admin account and NOT hidden from users.
-                // if both true, then display. Will only activate on 'user' level accounts.
-                makeCard(userArray, i, activeUserIndex); 
-                }
+    for ( let i = 0 ; i < userArray.length ; i++) {
+        if ( checkIfAdmin(userArray, i) && !checkHidden(userArray, i) ) { 
+            // check if the card is of an admin account and NOT hidden from users.
+            // if both true, then display. Will only activate on 'user' level accounts.
+            makeCard(userArray, i, activeUserIndex); 
         }
+    }
 }
 
 const showSelf = (userArray, activeUserIndex) => { makeCard(userArray, activeUserIndex, activeUserIndex); }
 
 // #endregion
 
-//build card & visibility button functions: makeCard(), toggleAdminVisibility(), removeFromHidden(), addToHidden()
+// #region build card & visibility button functions: makeCard(), toggleAdminVisibility()
 // build card HTML
 const makeCard = (userArray, cardIndex, selfIndex) => {
     let userCard = userArray[cardIndex];
     // <img src="..." class="card-img-top" alt="profile picture of ${userCard.username}"></img>
 
     let selfIsAdmin = checkIfAdmin(userArray, selfIndex);
-    let cardIsAdmin = checkIfAdmin(userArray, cardIndex);
     let cardIsSelf = checkIfSelf(cardIndex, selfIndex);
-    let isHidden = userArray[selfIndex].isHidden;
+    let selfIsHidden = userArray[selfIndex].isHidden;
 
     //create & alter value of 'selfClass' based on if this card is for the active user
     let selfClass = '';
@@ -126,11 +133,11 @@ const makeCard = (userArray, cardIndex, selfIndex) => {
     //portion visible TO Admin on OWN user card
     if (selfIsAdmin && cardIsSelf) {
         let buttonText, buttonClass; 
-        isHidden ? buttonText = 'show' : buttonText = 'hide';
-        isHidden ? buttonClass = 'hideAdmin btn-warning' : buttonClass = 'showAdmin btn-primary';
+        selfIsHidden ? buttonText = 'show' : buttonText = 'hide';
+        selfIsHidden ? buttonClass = 'hideAdmin btn-warning' : buttonClass = 'showAdmin btn-primary';
         output += `<hr>
             <a href="#" 
-            class="btn ${buttonClass}" id="btn-hide" userRef="${cardIndex}">${buttonText}</a> my profile`; 
+            class="btn ${buttonClass}" id="btn-hide" userRef="${cardIndex}">${buttonText} my profile</a>`; 
         }
 
     // below portion is the same for all users
@@ -139,43 +146,25 @@ const makeCard = (userArray, cardIndex, selfIndex) => {
     return output;
 }
 
-// const removeFromHidden = (userArray, adminIndex, targetUserIndex) => {
-//     let removeTarget;
-//     let hideAdminFrom = userArray[adminIndex].hideFrom;
-//     for (let i = 0 ; i < hideAdminFrom.length ; i++) {
-//         if (hideAdminFrom[i] == targetUserIndex) { 
-//             removeTarget = i; }
-//     }
-//     return hideAdminFrom.pop(removeTarget);
-// }
-
-// const addToHidden = () => {
-//     userArray[activeUserIndex].hideFrom.push(targetIndex);
-// }
-
+//button function to change appearance of button and value of admin user .isHidden
 const toggleAdminVisibility = (e, userArray) => {
     let target = e.target;
     let buttonUserIndex = target.attributes.userref.value;
     let adminIsHidden = userArray[buttonUserIndex].isHidden;
     
-    if (adminIsHidden == false) {
-        adminIsHidden = true;
-        target.innerText = 'show';
-        target.classList.add('hideAdmin', 'btn-warning');
-        target.classList.remove('showAdmin', 'btn-primary');
-    } else {
-        adminIsHidden = false;
-        target.innerText = 'hide';
-        target.classList.remove('hideAdmin', 'btn-warning');
-        target.classList.add('showAdmin', 'btn-primary');        
+    if (adminIsHidden == false) { //if self.isHidden initially false
+        userArray[buttonUserIndex].isHidden = true; //change value of self.isHidden to true; spotty functioning if use variable adminIsHidden
+        target.innerText = 'show my profile'; //change button text
+        target.classList.add('hideAdmin', 'btn-warning'); //add button classes & therefore styling
+        target.classList.remove('showAdmin', 'btn-primary'); //remove button classes & therefore styling
+    } else { //if self.isHidden initially true
+        userArray[buttonUserIndex].isHidden = false; //change value of self.isHidden to false; 
+        target.innerText = 'hide my profile'; //change button text
+        target.classList.remove('hideAdmin', 'btn-warning'); //add button classes & therefore styling
+        target.classList.add('showAdmin', 'btn-primary'); //remove button classes & therefore styling
     }
 }
-
-
-
-// button to hide/unhide from user
-
-// #endsetup
+// #endregion
 
 // #region call actions
 
