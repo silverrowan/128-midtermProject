@@ -79,23 +79,32 @@ makeAdmin(baseUsers, 1, "mod");
 makeAdmin(baseUsers, 2, "mod");
 // #endregion
 
-// #region setup login on load, set up references
-//reference & create modal itself
-const loginModal = document.querySelector('#loginModal');
-const loginModalBS = bootstrap.Modal.getOrCreateInstance(loginModal);
-//get login form input boxes & values
-const usernameIn = document.querySelector("#userNameIn");
-const userPassIn = document.querySelector("#userPasswordIn");
-const loginErrorMsg = document.querySelector("#incorrect");
+// #region setup navbar
+// hide (or not) login/change user menu button visibility
+// note not using aria-hidden = "true" as apparently shouldn't be used 
+// with diaplay:none, which is how the hiding elements is implemented here
+const changeNavBtnToChgUser = () => {
+    navLoginButton.className = "btn btn-primary";
+    navChangeUserButton.className = "btn btn-primary hidden";
+    navLoginButton.innerText = "Change User"
+}
 
-loginModalBS.show();
-//modal methods
-const closeModal = () => { loginModalBS.hide(); }
-// const focusModal = () => { usernameIn.focus(); }
-// focusModal(); // not working currently
+const changeNavBtnToLogin = () => {
+    navLoginButton.className = "btn btn-primary hidden";
+    navChangeUserButton.className = "btn btn-primary";
+    navLoginButton.innerText = "Login"
+}
+
+const navLoginButton = document.querySelector("#navLoginButton");
+const navChangeUserButton = document.querySelector("#navChangeUserButton");
+
+navLoginButton.addEventListener('click', () => changeNavBtnToChgUser );
+navChangeUserButton.addEventListener('click', () => changeNavBtnToLogin );
 // #endregion
 
-// #region setup login form validation
+// let activeUserIndex = '';
+
+// #region login modal functions: showErrorMsg(), hideErrorMsg(), checkUserPass()
 
 const showErrorMsg = () => {
     loginErrorMsg.classList.remove('hidden');
@@ -106,20 +115,15 @@ const hideErrorMsg = () => {
     loginErrorMsg.ariaHidden=true;
 }
 
-// login function and listener; activeUserIndex
-
+// login function: checkUserPass(); triggers appropriate load actions
 const checkUserPass = () => {
-    let userNameInput = usernameIn.value;
-    let userPassInput = userPassIn.value;
-
     for (let i = 0; i < baseUsers.length ; i++) {
-        if (baseUsers[i].username == userNameInput) {
-            if (baseUsers[i].uid == userPassInput) {
-                // let activeUser = userNameInput;
-                let activeUserIndex = i;
+        if (baseUsers[i].username == usernameIn.value) {
+            if (baseUsers[i].uid == userPassIn.value) {  
                 hideErrorMsg();
                 closeModal();
-                showUsers(baseUsers, activeUserIndex);
+                changeNavBtnToChgUser();
+                showUsers(baseUsers, i);
             } else { showErrorMsg(); }
             break;
         } else { showErrorMsg(); }
@@ -127,12 +131,34 @@ const checkUserPass = () => {
 }
 // #endregion
 
-// #region Get login form buttons & add listenters
+// #region setup login modal, trigger modal on load
+// reference & create modal itself
+const loginModal = document.querySelector('#loginModal');
+const loginModalBS = bootstrap.Modal.getOrCreateInstance(loginModal);
+//get login form input boxes & values
+const usernameIn = document.querySelector("#userNameIn");
+const userPassIn = document.querySelector("#userPasswordIn");
+const loginErrorMsg = document.querySelector("#incorrect");
+//Get login form buttons & add listenters
 const enterLogin = document.querySelector("#loginModalButton");
 const cancelLogin = document.querySelector("#loginCancelButton")
-enterLogin.addEventListener("click", checkUserPass);
+
+//modal methods, initial modal trigger
+const showLoginModal = () => loginModalBS.show();
+showLoginModal();
+
+const closeModal = () => { loginModalBS.hide(); }
+// #endregion
+
+//attach login modal login button listener
+enterLogin.addEventListener("click", () => checkUserPass () );
+cancelLogin.addEventListener("click", () => console.log("write function: clear user imput values, deny refresh") );
+// console.log(activeUserIndex);
+
 // cancelLogin.addEventListener("click", userLogin);
 // not working, for now just load empty page
+
+// #endregion
 
 const userDiv = document.querySelector("#userDiv");
 
@@ -144,7 +170,7 @@ const checkIfAdmin = (userArray, userIndex) => {
         return true; 
     } else { 
         return false; 
-    }    
+    }
 }
 
 // check if passed in indexes match; used to check if a card is of the active user
@@ -247,23 +273,8 @@ const toggleAdminVisibility = (e, userArray) => {
 }
 // #endregion
 
-// #region build page
+
 //apply listener to container DIV; bubbling will allow individual button differentiation
 //will error if anywhere else on div clicked
 userDiv.addEventListener('click', (e) => toggleAdminVisibility(e, baseUsers) );
 
-const navLoginButton = document.querySelector("#navLoginButton");
-const navChangeUserButton = document.querySelector("#navChangeUserButton");
-
-// toggle login/change user menu button by login status
-// note not using aria-hidden = "true" as apparently shouldn't be used 
-// with diaplay:none, which is how the hiding elements is implemented here
-const navButtonToggle = () => {
-    if (activeUserIndex == null) {
-        navLoginButton.className = "btn btn-primary";
-        navChangeUserButton.className = "btn btn-primary hidden";
-    } else {
-        navLoginButton.className = "btn btn-primary hidden";
-        navChangeUserButton.className = "btn btn-primary";
-    }
-}
