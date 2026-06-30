@@ -20,17 +20,44 @@ const baseUsers = [
 Object.freeze(baseUsers); //note this blocks makeNewUserObj
 // #endadd
 
-// #region enter user object information; includes function: makeAdmin()
+// #region enter user object information; includes functions: updateAllUsersAutoVaules(), ( inactive: makeRandomAlphanumeric(), makeNewUserObj(), ) updateUserAutoValues(), updateUserName(), makeAdmin()
 //available roles are: admin, mod, and user, with user having the lowest priviledges
-for (let i = 0; i < baseUsers.length; i++) {
-    let username = `user${i}`;
 
-    baseUsers[i].userRole = "user";
-    baseUsers[i].firstName = "fName" + i;
-    baseUsers[i].lastName = "lName" + i;
-    baseUsers[i].username = username;
-    baseUsers[i].email = `${username}@email.com`;
-    baseUsers[i].profileImage = `images/${username}.png`;
+const updateAllUsersAutoValues = (userObjArray) => {
+    for (let i = 0; i < userObjArray.length; i++) {
+        updateUserAutoValues(userObjArray, i)
+    }
+}
+
+// const makeRandomAlphanumeric = (length) => {
+//     const charSet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+//     let output = '';
+//     for (let i = 0; i < charSet.length() ; i++) {
+//         let j = Math.floor( Math.random() * charSet.length() )
+//         output += charSet[j]
+//     }
+//     return output;
+// }
+
+// const makeNewUserObj = ( userObjArray ) => {
+//     let i = userObjArray.length;
+//     userObjArray[i] = { "uid": makeRandomAlphanumeric(5) }
+// }
+
+const updateUserAutoValues = (userObjArray, userNumber) => {
+        let username = `user${userNumber}`;
+
+        userObjArray[userNumber].userRole = "user";
+        userObjArray[userNumber].firstName = "fName" + userNumber;
+        userObjArray[userNumber].lastName = "lName" + userNumber;
+        userObjArray[userNumber].username = username;
+        userObjArray[userNumber].email = `${username}@email.com`;
+        userObjArray[userNumber].profileImage = `images/${username}.png`;
+}
+const updateUserName = (userObjArray, i, firstName, lastName) => { // builds email out of name; leaves username and profileImage and role alone
+    if (firstName) { userObjArray[i].firstName = firstName };
+    if (lastName) { userObjArray[i].lastName = lastName };
+    userObjArray[i].email = `${firstName}_${lastName}@email.com`;
 }
 
 //function to change a user's role
