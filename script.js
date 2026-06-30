@@ -79,7 +79,7 @@ makeAdmin(baseUsers, 1, "mod");
 makeAdmin(baseUsers, 2, "mod");
 // #endregion
 
-// #region setup login modal, trigger modal on load; functions showLoginModal(), closeModal()
+// #region setup login modal, trigger modal on load; functions showLoginModal(), closeModal();
 // reference & create modal itself
 // const loginModal = document.querySelector('#loginModal');
 const loginModalBS = bootstrap.Modal.getOrCreateInstance( document.querySelector('#loginModal') );
@@ -98,9 +98,7 @@ showLoginModal();
 const closeModal = () => { loginModalBS.hide(); }
 // #endregion
 
-
-// #region login modal functions: showErrorMsg(), hideErrorMsg(), checkUserPass()
-
+// #region login modal functions: showErrorMsg(), hideErrorMsg(), checkUserPass(); includes listener attachment for Modal login and cancel buttons
 const showErrorMsg = () => {
     loginErrorMsg.classList.remove('hidden');
     loginErrorMsg.ariaHidden=false;
@@ -124,18 +122,10 @@ const checkUserPass = () => {
         } else { showErrorMsg(); }
     }
 }
-// #endregion
-
-
 
 //attach login modal login button listener
 enterLogin.addEventListener("click", () => checkUserPass() );
-cancelLogin.addEventListener("click", () => console.log("write function: clear user imput values, deny refresh") );
-// console.log(activeUserIndex);
-
-// cancelLogin.addEventListener("click", userLogin);
-// not working, for now just load empty page
-
+cancelLogin.addEventListener("click", closeModal);
 // #endregion
 
 // #region setup navbar
