@@ -20,23 +20,19 @@ const baseUsers = [
 Object.freeze(baseUsers);
 // #endadd
 
-let userList = baseUsers; //'rename' baseUsers to userList;
-
-// #region enter information into user objects
+// #region enter user object information; includes function: makeAdmin()
 //available roles are: admin, mod, and user, with user having the lowest priviledges
-for (let i = 0; i < userList.length; i++) {
+for (let i = 0; i < baseUsers.length; i++) {
     let username = `user${i}`;
 
-    userList[i].userRole = "user";
-    userList[i].firstName = "fName" + i;
-    userList[i].lastName = "lName" + i;
-    userList[i].username = username;
-    userList[i].email = `${username}@email.com`;
-    userList[i].profileImage = `images/${username}`;
+    baseUsers[i].userRole = "user";
+    baseUsers[i].firstName = "fName" + i;
+    baseUsers[i].lastName = "lName" + i;
+    baseUsers[i].username = username;
+    baseUsers[i].email = `${username}@email.com`;
+    baseUsers[i].profileImage = `images/${username}`;
 }
-// #endregion
 
-// #region change user roles of 3 users; function: makeAdmin()
 //function to change a user's role
 const makeAdmin = (userArray, adminUserIndex, adminType) => {
     userArray[adminUserIndex].userRole = adminType;
@@ -44,15 +40,15 @@ const makeAdmin = (userArray, adminUserIndex, adminType) => {
 }
 
 //Change 1 user's role to "admin", 2 to "mod" (moderator)
-makeAdmin(userList, 0, "admin");
-makeAdmin(userList, 1, "mod");
-makeAdmin(userList, 2, "mod");
+makeAdmin(baseUsers, 0, "admin");
+makeAdmin(baseUsers, 1, "mod");
+makeAdmin(baseUsers, 2, "mod");
 // #endregion
 
 // get div to contain cards
 const userDiv = document.querySelector("#userDiv");
 
-// #region function definitions: showUsers(), showAllUsers(), checkIfAdmin(), checkHidden(), makeCard()
+// #region functions: showUsers(), showAllUsers(), showAdmin(), showSelf(), checkIfAdmin(), checkHidden(), makeCard()
 // checking functions
 const checkIfAdmin = (userArray, userIndex) => {
     let role = userArray[userIndex].userRole;
@@ -74,19 +70,11 @@ const checkHidden = (userArray, activeUserIndex, adminIndex) => {
 
 //Display User Cards
 const showUsers = (userArray, activeUserIndex) => {
-    if (checkIfAdmin(userArray, activeUserIndex)) { // show admin/mods everyone
+    if (checkIfAdmin(userArray, activeUserIndex)) { // show admin/mods everyone (if logged in user is admin)
             showAllUsers(userArray, activeUserIndex);
     } else { 
-        for ( let i = 0 ; i < userArray.length ; i++) {
-            if ( i == activeUserIndex ) { // show self (not needed when user is admin/mod)
-                makeCard(userArray, i, activeUserIndex);
-            } else if ( checkIfAdmin(userArray, i) ) { // if user being checked is admin/mod
-                //check that mod/admin has not hidden themselves from the active user if not, then display
-                if ( !checkHidden(userArray, activeUserIndex, i) ) { 
-                makeCard(userArray, i, activeUserIndex); 
-                }
-            }
-        }
+        showAdmin(userArray, activeUserIndex);
+        showSelf(userArray, activeUserIndex); //Not needed when active user is admin
     }
 }
 
@@ -94,10 +82,21 @@ const showAllUsers = (userArray, selfIndex) => {
     console.log(userArray);
     
     for (let i = 0 ; i < userArray.length ; i++) {
-        // userDiv.innerHTML = `<p>testing</p>`;
         userDiv.innerHTML += makeCard(userArray, i, selfIndex);
     }
 }
+
+const showAdmin = (userArray, activeUserIndex) => {
+        for ( let i = 0 ; i < userArray.length ; i++) {
+            if ( checkIfAdmin(userArray, i) && !checkHidden(userArray, activeUserIndex, i) ) { 
+                // check if the card is of an admin account and NOT hidden from the active user.
+                // if both true, then display. Will only activate one 'user' level accounts.
+                makeCard(userArray, i, activeUserIndex); 
+                }
+        }
+}
+
+const showSelf = (userArray, activeUserIndex) => { makeCard(userArray, activeUserIndex, activeUserIndex); }
 
 // build card HTML
 const makeCard = (userArray, cardIndex, selfIndex) => {
@@ -143,4 +142,4 @@ const makeCard = (userArray, cardIndex, selfIndex) => {
 
 // #region hardcode user; bypass login
 let activeUserIndex = 0;
-showUsers(userList, activeUserIndex);
+showUsers(baseUsers, activeUserIndex);
