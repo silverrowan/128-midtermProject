@@ -174,7 +174,8 @@ const makeCard = (userArray, cardIndex, selfIndex) => {
             if (i != userCard.hideFrom.length - 1) { output += ', '; }
         }
     }
-    let output = `<div class="card">
+    let output = `<div class ="col col-xs-12 col-sm-6 col-lg-3 col-xl-2 mb-3" >
+        <div class="card ${userCard.userRole}">
         <div class="card-body">
         <h5 class="card-title">${userCard.username}</h5>
         <p class="card-text">
@@ -185,7 +186,7 @@ const makeCard = (userArray, cardIndex, selfIndex) => {
     if ( showHiddenFrom ) {
         output += `Hidden from users: ${hiddenString}`;
     }
-    output += `</p></div></div>`
+    output += `</p></div></div></div>`
         // <!-- <a href="#" class="btn btn-primary">Go somewhere</a> -->
     return output;
 }
