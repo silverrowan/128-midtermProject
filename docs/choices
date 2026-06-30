@@ -1,2 +1,3 @@
 - I chose to have a single button menubar as there is only simple functionality to the site at this point
 - I have chose to make it so admin users cannot hide from other admin users
+- the 'mod' elevated priviledge role has no functional difference from the admin role, but is highlighted with a softer background color.

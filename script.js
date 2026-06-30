@@ -48,7 +48,8 @@ makeAdmin(baseUsers, 2, "mod");
 // get div to contain cards
 const userDiv = document.querySelector("#userDiv");
 
-// #region functions: showUsers(), showAllUsers(), showAdmin(), showSelf(), checkIfAdmin(), checkHidden(), makeCard()
+
+// #region functions: showUsers(), showAllUsers(), showAdmin(), showSelf(), checkIfAdmin(), checkHidden()
 // checking functions
 const checkIfAdmin = (userArray, userIndex) => {
     let role = userArray[userIndex].userRole;
@@ -59,11 +60,11 @@ const checkIfAdmin = (userArray, userIndex) => {
     }    
 }
 
-const checkHidden = (userArray, activeUserIndex, adminIndex) => {
-    let hideFrom = userArray[adminIndex].hideFrom;
+const checkHidden = (userArray, targetUserIndex, adminIndex) => {
+    let hideAdminFrom = userArray[adminIndex].hideFrom;
     let hidden = false;
-    for (let i = 0 ; i < hideFrom.length ; i++) {
-        if (hideFrom[i] == activeUserIndex) { hidden = true; }
+    for (let i = 0 ; i < hideAdminFrom.length ; i++) {
+        if (hideAdminFrom[i] == targetUserIndex) { hidden = true; }
     }
     return hidden;
 }
@@ -98,6 +99,8 @@ const showAdmin = (userArray, activeUserIndex) => {
 
 const showSelf = (userArray, activeUserIndex) => { makeCard(userArray, activeUserIndex, activeUserIndex); }
 
+
+//build card & visibility button functions: makeCard(), toggleAdminVisibility(), removeFromHidden(), addToHidden()
 // build card HTML
 const makeCard = (userArray, cardIndex, selfIndex) => {
     let userCard = userArray[cardIndex];
@@ -106,15 +109,12 @@ const makeCard = (userArray, cardIndex, selfIndex) => {
     let selfIsAdmin = checkIfAdmin(userArray, selfIndex);
     let cardIsAdmin = checkIfAdmin(userArray, cardIndex);
 
-    // let cardIsAdmin = 
-    // let selfIsAdmin = checkIfAdmin(userArray, selfIndex);
-    // if (showHiddenFrom) {
-
-    // }
-    //if the this card is for the active user, apply the 'self' style class
+    //create & alter value of 'selfClass' based on if this card is for the active user
     let selfClass = '';
     cardIndex == selfIndex ? selfClass = 'self' : selfClass = '';
-    //card HTML
+
+    //build card HTML
+    //below portion is the same for all users
     let output = `<div class ="col col-s-12 col-md-6 col-lg-4 col-xl-2 mb-3" >
         <div class="card ${userCard.userRole} ${selfClass}">
         <div class="card-body">
@@ -123,13 +123,56 @@ const makeCard = (userArray, cardIndex, selfIndex) => {
         Full Name: ${userCard.firstName} ${userCard.lastName}<br>
         email: ${userCard.email}<br>
         role: ${userCard.userRole}<br>`
-    if (selfIsAdmin && !cardIsAdmin) {
-        // checkIfHidden();
-        output += `Set visiblity to ${userCard.username} to: <a href="#" class="btn btn-primary">hidden</a>` }
 
+    //below portion is only visible by Admin users on NON admin user cards
+    if (selfIsAdmin && !cardIsAdmin) {
+        let isHidden = checkHidden(userArray, cardIndex, selfIndex);
+        let buttonText, buttonClass; 
+        isHidden ? buttonText = 'visible' : buttonText = 'hidden';
+        isHidden ? buttonClass = 'hideAdmin btn-warning' : buttonClass = 'showAdmin btn-success';
+
+        output += `<hr>Set my visiblity to ${userCard.username} to: <a href="#" 
+            class="btn ${buttonClass}" id="btn-${userCard.username}" userRef="${cardIndex}">${buttonText}</a>`; }
+
+        // below portion is the same for all users
     output += `</p></div></div></div>`
         // <!-- <a href="#" class="btn btn-primary">Go somewhere</a> -->
     return output;
+}
+
+const removeFromHidden = (userArray, adminIndex, targetUserIndex) => {
+    let removeTarget;
+    let hideAdminFrom = userArray[adminIndex].hideFrom;
+    for (let i = 0 ; i < hideAdminFrom.length ; i++) {
+        if (hideAdminFrom[i] == targetUserIndex) { 
+            removeTarget = i; }
+    }
+    return hideAdminFrom.pop(removeTarget);
+}
+
+const addToHidden = () => {
+    userArray[activeUserIndex].hideFrom.push(targetIndex);
+}
+
+const toggleAdminVisibility = (e) => {
+    let target = e.target;
+    console.log(e);
+    console.log(target);
+    console.log(target.userRef);
+    console.log(baseUsers[activeUserIndex].hideFrom);
+    
+    target.classList.toggle('hideAdmin');
+    target.classList.toggle('btn-warning');
+    target.classList.toggle('showAdmin');
+    target.classList.toggle('btn-success');
+    if (target.outerText == 'hidden') { 
+        target.outerText == 'visible';
+        removeFromHidden(baseUsers, activeUserIndex, target.userRef);
+     }
+    else if (target.outerText == 'visble') { 
+        target.outerText == 'hidden'; 
+        addToHidden();
+    }   
 }
 
 
@@ -143,3 +186,6 @@ const makeCard = (userArray, cardIndex, selfIndex) => {
 // #region hardcode user; bypass login
 let activeUserIndex = 0;
 showUsers(baseUsers, activeUserIndex);
+
+//apply listener to container DIV; bubbling will allow individual button differentiation
+userDiv.addEventListener('click', (e) => toggleAdminVisibility(e) );
