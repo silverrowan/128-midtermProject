@@ -52,63 +52,6 @@ makeAdmin(baseUsers, 2, "mod");
 console.log(baseUsers);
 // #endregion
 
-// #region setup login on load, set up references
-//reference & create modal itself
-const loginModal = document.querySelector('#loginModal');
-const loginModalBS = bootstrap.Modal.getOrCreateInstance(loginModal);
-//get login form input boxes & values
-const usernameIn = document.querySelector("#userNameIn");
-const userPassIn = document.querySelector("#userPasswordIn");
-const loginErrorMsg = document.querySelector("#incorrect");
-
-loginModalBS.show();
-//modal methods
-const closeModal = () => { loginModalBS.hide(); }
-// const focusModal = () => { usernameIn.focus(); }
-// focusModal(); // not working currently
-// #endregion
-
-// #region setup login form validation
-
-const showErrorMsg = () => {
-    loginErrorMsg.classList.remove('hidden');
-    loginErrorMsg.ariaHidden=false;
-}
-const hideErrorMsg = () => {
-    loginErrorMsg.classList.add('hidden');
-    loginErrorMsg.ariaHidden=true;
-}
-
-// login function and listener; activeUserIndex
-
-const checkUserPass = () => {
-    let userNameInput = usernameIn.value;
-    let userPassInput = userPassIn.value;
-
-    for (let i = 0; i < baseUsers.length ; i++) {
-        if (baseUsers[i].username == userNameInput) {
-            if (baseUsers[i].uid == userPassInput) {
-                // let activeUser = userNameInput;
-                let activeUserIndex = i;
-                hideErrorMsg();
-                closeModal();
-                showUsers(baseUsers, activeUserIndex);
-            } else { showErrorMsg(); }
-            break;
-        } else { showErrorMsg(); }
-    }
-}
-// #endregion
-
-// #region Get login form buttons & add listenters
-const enterLogin = document.querySelector("#loginModalButton");
-const cancelLogin = document.querySelector("#loginCancelButton")
-enterLogin.addEventListener("click", checkUserPass);
-// cancelLogin.addEventListener("click", userLogin);
-// not working, for now just load empty page
-
-
-
 const showUsers = (userArray, activeUserIndex) => {
     // if user.role matches "admin" or "mod" OR user.name = activeuser
     // then add user
@@ -192,3 +135,9 @@ const makeCard = (userArray, cardIndex, selfIndex) => {
 }
 
 // #endsetup
+
+// #region call actions
+
+// #region hardcode user; bypass login
+let activeUserIndex = 0;
+showUsers(baseUsers, activeUserIndex);
