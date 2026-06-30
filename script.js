@@ -79,7 +79,6 @@ makeAdmin(baseUsers, 1, "mod");
 makeAdmin(baseUsers, 2, "mod");
 // #endregion
 
-<<<<<<< HEAD
 // #region setup login on load, set up references
 //reference & create modal itself
 const loginModal = document.querySelector('#loginModal');
@@ -135,9 +134,6 @@ enterLogin.addEventListener("click", checkUserPass);
 // cancelLogin.addEventListener("click", userLogin);
 // not working, for now just load empty page
 
-=======
-// get div to contain cards
->>>>>>> autoLogin
 const userDiv = document.querySelector("#userDiv");
 
 // #region check if functions: checkIfAdmin(), checkIfSelf(), checkHidden()
@@ -252,25 +248,22 @@ const toggleAdminVisibility = (e, userArray) => {
 // #endregion
 
 // #region build page
-
-// #region hardcode user; bypass login
-let activeUserIndex = 0;
-showUsers(baseUsers, activeUserIndex);
-
 //apply listener to container DIV; bubbling will allow individual button differentiation
 //will error if anywhere else on div clicked
 userDiv.addEventListener('click', (e) => toggleAdminVisibility(e, baseUsers) );
 
-// #toggle login/change user menu button by login status
-// note not using aria-hidden = "true" as apparently shouldn't be used 
-// with diaplay:none, which is how the hiding elements is implemented here
 const navLoginButton = document.querySelector("#navLoginButton");
 const navChangeUserButton = document.querySelector("#navChangeUserButton");
 
-if (activeUserIndex == null) {
-    navLoginButton.className = "btn btn-primary";
-    navChangeUserButton.className = "btn btn-primary hidden";
-} else {
-    navLoginButton.className = "btn btn-primary hidden";
-    navChangeUserButton.className = "btn btn-primary";
+// toggle login/change user menu button by login status
+// note not using aria-hidden = "true" as apparently shouldn't be used 
+// with diaplay:none, which is how the hiding elements is implemented here
+const navButtonToggle = () => {
+    if (activeUserIndex == null) {
+        navLoginButton.className = "btn btn-primary";
+        navChangeUserButton.className = "btn btn-primary hidden";
+    } else {
+        navLoginButton.className = "btn btn-primary hidden";
+        navChangeUserButton.className = "btn btn-primary";
+    }
 }
