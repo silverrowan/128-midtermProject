@@ -40,34 +40,24 @@
 	  	<!-- Modal Footer (Buttons) -->
       	<div class="modal-footer">
         	<button type="button" class="btn btn-outline-secondary " id="loginCancelButton">Cancel</button>
-        	<button type="button" class="btn btn-success" id="loginModalButton">Login</button>
+        	<button type="button" class="btn btn-primary" id="loginModalButton">Login</button>
       	</div>
     </div>
   </div>
 </div>
 
 <!--NAVBAR-->
-	<nav class="navbar navbar-expand-lg">
+	<nav class="navbar navbar-expand-lg mb-3">
 	  <div class="container-fluid">
 		<a class="navbar-brand" href="#">Members</a>
-		<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-		  <span class="navbar-toggler-icon"></span>
+		<button type="button nav-link" class="btn btn-primary hidden" id="navChangeUserButton"
+			data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+				Change User
 		</button>
-		<div class="collapse navbar-collapse" id="navbarNav">
-		  <ul class="navbar-nav">
-			<li class="nav-item"><a class="nav-link active" aria-current="page" href="indexTemplate.html">Me</a></li>
-			<li class="nav-item">
-				<button type="button nav-link" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
-					Change User
-				</button>
-			</li>
-			<li class="nav-item">
-				<button type="button nav-link" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
-					Login
-				</button>
-			</li>
-		  </ul>
-		</div>
+		<button type="button nav-link" class="btn btn-primary" id="navLoginButton"
+			data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+				Login
+		</button>
 	  </div>
 	</nav>
 <!--MAIN-->

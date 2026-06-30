@@ -17,41 +17,69 @@ const baseUsers = [
     { "uid": "VIF0S" }, 
     { "uid": "YCQPM" }
 ];
-Object.freeze(baseUsers);
+Object.freeze(baseUsers); //note this blocks makeNewUserObj
 // #endadd
 
-// #region enter information into user objects
+// #region enter user object information; includes functions: updateAllUsersAutoVaules(), ( inactive: makeRandomAlphanumeric(), makeNewUserObj(), ) updateUserAutoValues(), updateUserName(), makeAdmin()
 //available roles are: admin, mod, and user, with user having the lowest priviledges
-for (let i = 0; i < baseUsers.length; i++) {
-    let username = `user${i}`;
 
-    baseUsers[i].userRole = "user";
-    baseUsers[i].firstName = "fName" + i;
-    baseUsers[i].lastName = "lName" + i;
-    baseUsers[i].username = username;
-    baseUsers[i].email = `${username}@email.com`;
-    baseUsers[i].profileImage = `images/${username}`;
-    // username = baseUsers[i]; this didn't allow me to use username as objName
+const updateAllUsersAutoValues = (userObjArray) => {
+    for (let i = 0; i < userObjArray.length; i++) {
+        updateUserAutoValues(userObjArray, i)
+    }
 }
-// #endregion
 
-// #region change user roles of 3 users
+// const makeRandomAlphanumeric = (length) => {
+//     const charSet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+//     let output = '';
+//     for (let i = 0; i < charSet.length() ; i++) {
+//         let j = Math.floor( Math.random() * charSet.length() )
+//         output += charSet[j]
+//     }
+//     return output;
+// }
+
+// const makeNewUserObj = ( userObjArray ) => {
+//     let i = userObjArray.length;
+//     userObjArray[i] = { "uid": makeRandomAlphanumeric(5) }
+// }
+
+const updateUserAutoValues = (userObjArray, userNumber) => {
+        let username = `user${userNumber}`;
+
+        userObjArray[userNumber].userRole = "user";
+        userObjArray[userNumber].firstName = "fName" + userNumber;
+        userObjArray[userNumber].lastName = "lName" + userNumber;
+        userObjArray[userNumber].username = username;
+        userObjArray[userNumber].email = `${username}@email.com`;
+        userObjArray[userNumber].profileImage = `images/${username}.png`;
+}
+const updateUserName = (userObjArray, i, firstName, lastName) => { // builds email out of name; leaves username and profileImage and role alone
+    if (firstName) { userObjArray[i].firstName = firstName };
+    if (lastName) { userObjArray[i].lastName = lastName };
+    userObjArray[i].email = `${firstName}_${lastName}@email.com`;
+}
+
+//function to change a user's role
 const makeAdmin = (userArray, adminUserIndex, adminType) => {
     userArray[adminUserIndex].userRole = adminType;
-    userArray[adminUserIndex].hideFrom = [];
+    userArray[adminUserIndex].isHidden = false;
 }
 
-//Change 1 user's role to "admin"
-makeAdmin(baseUsers, 0, "admin");
-// baseUsers.user0.userRole = "admin";
+// Create Default Users (to match objects in baseUsers array)
+updateAllUsersAutoValues(baseUsers);
 
-//Change 2 user's role to "mod" (moderator)
+// give users real names etc
+// updateUserName(baseUsers, i, firstName, lastName );
+
+
+//Change 1 user's role to "admin", 2 to "mod" (moderator)
+makeAdmin(baseUsers, 0, "admin");
 makeAdmin(baseUsers, 1, "mod");
 makeAdmin(baseUsers, 2, "mod");
-
-console.log(baseUsers);
 // #endregion
 
+<<<<<<< HEAD
 // #region setup login on load, set up references
 //reference & create modal itself
 const loginModal = document.querySelector('#loginModal');
@@ -107,17 +135,13 @@ enterLogin.addEventListener("click", checkUserPass);
 // cancelLogin.addEventListener("click", userLogin);
 // not working, for now just load empty page
 
+=======
+// get div to contain cards
+>>>>>>> autoLogin
 const userDiv = document.querySelector("#userDiv");
 
-const showAllUsers = (userArray, selfIndex) => {
-    console.log(userArray);
-    
-    for (let i = 0 ; i < userArray.length ; i++) {
-        // userDiv.innerHTML = `<p>testing</p>`;
-        userDiv.innerHTML += makeCard(userArray, i, selfIndex);
-    }
-}
-
+// #region check if functions: checkIfAdmin(), checkIfSelf(), checkHidden()
+// checking if passed in index is of an admin user
 const checkIfAdmin = (userArray, userIndex) => {
     let role = userArray[userIndex].userRole;
     if ( role == "admin"  || role == "mod" ) { 
@@ -127,44 +151,126 @@ const checkIfAdmin = (userArray, userIndex) => {
     }    
 }
 
-const checkHidden = (userArray, activeUserIndex, adminIndex) => {
-    let hideFrom = userArray[adminIndex].hideFrom;
-    let hidden = false;
-    for (let i = 0 ; i < hideFrom.length ; i++) {
-        if (hideFrom[i] == activeUserIndex) { hidden = true; }
+// check if passed in indexes match; used to check if a card is of the active user
+const checkIfSelf = (cardIndex, userIndex) => cardIndex == userIndex;
+
+// check if passed in userindex has .isHidden = true
+const checkHidden = (userArray, userIndex) => userArray[userIndex].isHidden;
+// #endregion
+
+// #region who to display functions: showUsers(), showAllUsers(), showAdmin(), showSelf()
+//Display User Cards
+const showUsers = (userArray, activeUserIndex) => {
+    if (checkIfAdmin(userArray, activeUserIndex)) { // show admin/mods everyone (if logged in user is admin)
+        showAllUsers(userArray, activeUserIndex);
+    } else { 
+        showAdmin(userArray, activeUserIndex);
+        showSelf(userArray, activeUserIndex); //Not needed when active user is admin
     }
-    return hidden;
 }
 
+const showAllUsers = (userArray, selfIndex) => { 
+    for (let i = 0 ; i < userArray.length ; i++) {
+        userDiv.innerHTML += makeCard(userArray, i, selfIndex);
+    }
+}
+
+const showAdmin = (userArray, activeUserIndex) => {
+    for ( let i = 0 ; i < userArray.length ; i++) {
+        if ( checkIfAdmin(userArray, i) && !checkHidden(userArray, i) ) { 
+            // check if the card is of an admin account and NOT hidden from users.
+            // if both true, then display. Will only activate on 'user' level accounts.
+            makeCard(userArray, i, activeUserIndex); 
+        }
+    }
+}
+
+const showSelf = (userArray, activeUserIndex) => { makeCard(userArray, activeUserIndex, activeUserIndex); }
+
+// #endregion
+
+// #region build card & visibility button functions: makeCard(), toggleAdminVisibility()
+// build card HTML
 const makeCard = (userArray, cardIndex, selfIndex) => {
     let userCard = userArray[cardIndex];
     // <img src="..." class="card-img-top" alt="profile picture of ${userCard.username}"></img>
-    let hiddenString ="";
-    let showHiddenFrom = cardIndex == selfIndex && checkIfAdmin(userArray, cardIndex);
-    // let cardIsAdmin = 
-    // let selfIsAdmin = checkIfAdmin(userArray, selfIndex);
-    if (showHiddenFrom) {
-        for ( let i = 0 ; i < userCard.hideFrom.length ; i++) {
-            hiddenFromUserIndex = userCard.hideFrom[i];
-            hiddenString += userArray[hiddenFromUserIndex].username;
-            if (i != userCard.hideFrom.length - 1) { output += ', '; }
-        }
-    }
-    let output = `<div class ="col col-xs-12 col-sm-6 col-lg-3 col-xl-2 mb-3" >
-        <div class="card ${userCard.userRole}">
+
+    let selfIsAdmin = checkIfAdmin(userArray, selfIndex);
+    let cardIsSelf = checkIfSelf(cardIndex, selfIndex);
+    let selfIsHidden = userArray[selfIndex].isHidden;
+
+    //create & alter value of 'selfClass' based on if this card is for the active user
+    let selfClass = '';
+    cardIndex == selfIndex ? selfClass = 'self' : selfClass = '';
+
+    //build card HTML
+    //below portion is the same for all users
+    let output = `<div class ="col col-s-12 col-md-6 col-lg-3 col-xl-2 mb-3" >
+        <div class="card ${userCard.userRole} ${selfClass}">
+        <img src="${userCard.profileImage}" alt="profile picture of ${userCard.username}" class="card-img-top"></img>
         <div class="card-body">
-        <h5 class="card-title">${userCard.username}</h5>
+        <h5 class="card-title ${selfClass}">${userCard.username}</h5>
         <p class="card-text">
         Full Name: ${userCard.firstName} ${userCard.lastName}<br>
         email: ${userCard.email}<br>
         role: ${userCard.userRole}<br>`
 
-    if ( showHiddenFrom ) {
-        output += `Hidden from users: ${hiddenString}`;
-    }
+    //portion visible TO Admin on OWN user card
+    if (selfIsAdmin && cardIsSelf) {
+        let buttonText, buttonClass; 
+        selfIsHidden ? buttonText = 'show' : buttonText = 'hide';
+        selfIsHidden ? buttonClass = 'hideAdmin btn-warning' : buttonClass = 'showAdmin btn-primary';
+        output += `<hr>
+            <a href="#" 
+            class="btn ${buttonClass}" id="btn-hide" userRef="${cardIndex}">${buttonText} my profile</a>`; 
+        }
+
+    // below portion is the same for all users
     output += `</p></div></div></div>`
         // <!-- <a href="#" class="btn btn-primary">Go somewhere</a> -->
     return output;
 }
 
-// #endsetup
+//button function to change appearance of button and value of admin user .isHidden
+const toggleAdminVisibility = (e, userArray) => {
+    let target = e.target;
+    let buttonUserIndex = target.attributes.userref.value;
+    let adminIsHidden = userArray[buttonUserIndex].isHidden;
+    
+    if (adminIsHidden == false) { //if self.isHidden initially false
+        userArray[buttonUserIndex].isHidden = true; //change value of self.isHidden to true; spotty functioning if use variable adminIsHidden
+        target.innerText = 'show my profile'; //change button text
+        target.classList.add('hideAdmin', 'btn-warning'); //add button classes & therefore styling
+        target.classList.remove('showAdmin', 'btn-primary'); //remove button classes & therefore styling
+    } else { //if self.isHidden initially true
+        userArray[buttonUserIndex].isHidden = false; //change value of self.isHidden to false; 
+        target.innerText = 'hide my profile'; //change button text
+        target.classList.remove('hideAdmin', 'btn-warning'); //add button classes & therefore styling
+        target.classList.add('showAdmin', 'btn-primary'); //remove button classes & therefore styling
+    }
+}
+// #endregion
+
+// #region build page
+
+// #region hardcode user; bypass login
+let activeUserIndex = 0;
+showUsers(baseUsers, activeUserIndex);
+
+//apply listener to container DIV; bubbling will allow individual button differentiation
+//will error if anywhere else on div clicked
+userDiv.addEventListener('click', (e) => toggleAdminVisibility(e, baseUsers) );
+
+// #toggle login/change user menu button by login status
+// note not using aria-hidden = "true" as apparently shouldn't be used 
+// with diaplay:none, which is how the hiding elements is implemented here
+const navLoginButton = document.querySelector("#navLoginButton");
+const navChangeUserButton = document.querySelector("#navChangeUserButton");
+
+if (activeUserIndex == null) {
+    navLoginButton.className = "btn btn-primary";
+    navChangeUserButton.className = "btn btn-primary hidden";
+} else {
+    navLoginButton.className = "btn btn-primary hidden";
+    navChangeUserButton.className = "btn btn-primary";
+}
