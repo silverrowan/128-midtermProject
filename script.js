@@ -79,6 +79,26 @@ makeAdmin(baseUsers, 1, "mod");
 makeAdmin(baseUsers, 2, "mod");
 // #endregion
 
+// #region setup login modal, trigger modal on load; functions showLoginModal(), closeModal()
+// reference & create modal itself
+// const loginModal = document.querySelector('#loginModal');
+const loginModalBS = bootstrap.Modal.getOrCreateInstance( document.querySelector('#loginModal') );
+//get login form input boxes & values
+const usernameIn = document.querySelector("#userNameIn");
+const userPassIn = document.querySelector("#userPasswordIn");
+const loginErrorMsg = document.querySelector("#incorrect");
+//Get login form buttons & add listenters
+const enterLogin = document.querySelector("#loginModalButton");
+const cancelLogin = document.querySelector("#loginCancelButton")
+
+//modal methods, initial modal trigger
+const showLoginModal = () => loginModalBS.show();
+showLoginModal();
+
+const closeModal = () => { loginModalBS.hide(); }
+// #endregion
+
+
 // #region login modal functions: showErrorMsg(), hideErrorMsg(), checkUserPass()
 
 const showErrorMsg = () => {
@@ -106,23 +126,7 @@ const checkUserPass = () => {
 }
 // #endregion
 
-// #region setup login modal, trigger modal on load
-// reference & create modal itself
-// const loginModal = document.querySelector('#loginModal');
-const loginModalBS = bootstrap.Modal.getOrCreateInstance( document.querySelector('#loginModal') );
-//get login form input boxes & values
-const usernameIn = document.querySelector("#userNameIn");
-const userPassIn = document.querySelector("#userPasswordIn");
-const loginErrorMsg = document.querySelector("#incorrect");
-//Get login form buttons & add listenters
-const enterLogin = document.querySelector("#loginModalButton");
-const cancelLogin = document.querySelector("#loginCancelButton")
 
-//modal methods, initial modal trigger
-const showLoginModal = () => loginModalBS.show();
-showLoginModal();
-
-const closeModal = () => { loginModalBS.hide(); }
 
 //attach login modal login button listener
 enterLogin.addEventListener("click", () => checkUserPass() );
@@ -180,29 +184,28 @@ const checkIfSelf = (cardIndex, userIndex) => cardIndex == userIndex;
 const checkHidden = (userArray, userIndex) => userArray[userIndex].isHidden;
 // #endregion
 
-// #region who to display functions: showUsers(), showAllUsers(), showAdmin(), showSelf()
+// #region who to display functions: showUsers(), showAllUsers(), showAdmin(), showSelf(); incl hideAdminBtn event listener
 //Display User Cards
 const showUsers = (userArray, activeUserIndex) => {
     if (checkIfAdmin(userArray, activeUserIndex)) { // show admin/mods everyone (if logged in user is admin)
         showAllUsers(userArray, activeUserIndex);
-        let hideAdminBtn = document.querySelector("#btn-hide");
         
-        
-        console.log(activeUserIndex);
-        console.log(baseUsers[activeUserIndex].isHidden);
-        
-        
-        hideAdminBtn.addEventListener('click', (e) => toggleAdminVisibility(e, activeUserIndex) )
     } else { 
         showAdmin(userArray, activeUserIndex);
         showSelf(userArray, activeUserIndex); //Not needed when active user is admin
     }
 }
 
+const addListenerToHideAdminBtn = (selfIndex) => {
+    let hideAdminBtn = document.querySelector("#btn-hide");
+    hideAdminBtn.addEventListener('click', (e) => toggleAdminVisibility(e, selfIndex) )
+}
+
 const showAllUsers = (userArray, selfIndex) => { 
     for (let i = 0 ; i < userArray.length ; i++) {
         userDiv.innerHTML += makeCard(userArray, i, selfIndex);
     }
+    addListenerToHideAdminBtn(selfIndex);
 }
 
 const showAdmin = (userArray, activeUserIndex) => {
@@ -264,7 +267,7 @@ const makeCard = (userArray, cardIndex, selfIndex) => {
 //button function to change appearance of button and value of admin user .isHidden
 const toggleAdminVisibility = (e, activeUserIndex) => {
     let target = e.target
-    
+
     console.log(activeUserIndex);
     console.log(baseUsers[activeUserIndex]);
     console.log(baseUsers[activeUserIndex].userRole);
