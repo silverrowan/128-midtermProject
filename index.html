@@ -36,10 +36,6 @@ All users will see thier profile highlighted with a thicker border of different 
 User roles are also visually differentiated; Admin role users have a medium blue card background, Mod role cards have a light blue background, and User role cards have a white background
 -->
 
-
-
-
-
 <!-- Modal -->
 <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="LoginTitle" aria-hidden="true">
   <div class="modal-dialog">
@@ -55,11 +51,11 @@ User roles are also visually differentiated; Admin role users have a medium blue
 			<div class="mb-3">
 				<div id="incorrect" class="form-text text-danger h5 hidden" aria-hidden="true">Username or password is incorrect.</div>
 				<label for="userNameIn" class="form-label">Username</label>
-				<input type="text" class="form-control" id="userNameIn" aria-describedby="username">
+				<input type="text" class="form-control" id="userNameIn" pattern="^[a-zA-Z01-9_-.]*$" aria-describedby="username">
 			</div>
 			<div class="mb-3">
 				<label for="userPasswordIn" class="form-label">Password</label>
-				<input type="password" class="form-control" id="userPasswordIn">
+				<input type="password" class="form-control" id="userPasswordIn" pattern="^[a-zA-Z01-9_-.]*$">
 			</div>
       	</div>
 	  	<!-- Modal Footer (Buttons) -->

@@ -21,6 +21,9 @@ There is a menu bar with a single button.
 Any user changes require editing the files *before* opening:
 
 editing users and admin roles needs to be done in the script.js file
+Note that the uid and username fields are limied to alphanumeric characters, _ - and .
+    - no whitespaces are permitted in these fields
+
     - change a user's first name, last name, and derived email information by: 
         - calling the 'updateUserName()' function.
             - this should be done in the noted section ( approximately line 85 ) in the file to ensure the changes take immediately
