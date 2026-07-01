@@ -130,29 +130,27 @@ cancelLogin.addEventListener("click", closeModal);
 
 // #region setup navbar
 
-// const navLoginButton = document.querySelector("#navLoginButton");
-// const navChangeUserButton = document.querySelector("#navChangeUserButton");
+const navLoginButton = document.querySelector("#navLoginButton");
+const navChangeUserButton = document.querySelector("#navChangeUserButton");
 
-// // hide (or not) login/change user menu button visibility
-// // note not using aria-hidden = "true" as apparently shouldn't be used 
-// // with diaplay:none, which is how the hiding elements is implemented here
-// const changeNavBtnToChgUser = () => {
-//     navLoginButton.className = "btn btn-primary";
-//     navChangeUserButton.className = "btn btn-primary hidden";
-//     navLoginButton.innerText = "Change User"
-// }
+// hide (or not) login/change user menu button visibility
+// note not using aria-hidden = "true" as apparently shouldn't be used 
+// with diaplay:none, which is how the hiding elements is implemented here
+const changeNavBtnToChgUser = () => {
+    navLoginButton.className = "btn btn-primary";
+    navChangeUserButton.className = "btn btn-primary hidden";
+    navLoginButton.innerText = "Change User"
+}
 
-// const changeNavBtnToLogin = () => {
-//     navLoginButton.className = "btn btn-primary hidden";
-//     navChangeUserButton.className = "btn btn-primary";
-//     navLoginButton.innerText = "Login"
-// }
+const changeNavBtnToLogin = () => {
+    navLoginButton.className = "btn btn-primary hidden";
+    navChangeUserButton.className = "btn btn-primary";
+    navLoginButton.innerText = "Login"
+}
 
-// navLoginButton.addEventListener('click', () => changeNavBtnToChgUser );
-// navChangeUserButton.addEventListener('click', () => changeNavBtnToLogin );
+navLoginButton.addEventListener('click', () => changeNavBtnToChgUser );
+navChangeUserButton.addEventListener('click', () => changeNavBtnToLogin );
 // #endregion
-
-// let activeUserIndex = '';
 
 const userDiv = document.querySelector("#userDiv");
 
@@ -257,13 +255,6 @@ const makeCard = (userArray, cardIndex, selfIndex) => {
 //button function to change appearance of button and value of admin user .isHidden
 const toggleAdminVisibility = (e, activeUserIndex) => {
     let target = e.target
-
-    console.log(activeUserIndex);
-    console.log(baseUsers[activeUserIndex]);
-    console.log(baseUsers[activeUserIndex].userRole);
-    console.log(baseUsers[activeUserIndex].isHidden);
-    
-
     let adminIsHidden = baseUsers[activeUserIndex].isHidden;
     
     if (adminIsHidden == false) { //if self.isHidden initially false
@@ -279,9 +270,4 @@ const toggleAdminVisibility = (e, activeUserIndex) => {
     }
 }
 // #endregion
-
-
-// //apply listener to container DIV; bubbling will allow individual button differentiation
-// //will error if anywhere else on div clicked
-// userDiv.addEventListener('click', );
 
