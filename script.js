@@ -5,7 +5,7 @@ const baseUsers = [
     { "uid": "0JDHD" }, 
     { "uid": "65EO3" }, 
     { "uid": "8D8WN" }, 
-    { "uid": "AC1A7" }, 
+    { "uid": "aaa" }, //AC1A7
     { "uid": "DMEFU" }, 
     { "uid": "DOCMG" }, 
     { "uid": "K0Y9P" }, 
@@ -115,7 +115,7 @@ const checkUserPass = () => {
             if (baseUsers[i].uid == userPassIn.value) {  
                 hideErrorMsg();
                 closeModal();
-                // changeNavBtnToChgUser();
+                changeNavBtnToChgUser();
                 showUsers(baseUsers, i); //note i = activeUser now, b/c both ifs were true
             } else { showErrorMsg(); }
             break;
@@ -146,8 +146,15 @@ const changeNavBtnToChgUser = () => {
     navChangeUserButton.className = "btn btn-primary";
 }
 
-navLoginButton.addEventListener('click', changeNavBtnToChgUser );
-navChangeUserButton.addEventListener('click', changeNavBtnToLogin );
+const loginViaNavBtn = () => {
+    clearUsers();
+    changeNavBtnToLogin();
+    showLoginModal();
+}
+
+navLoginButton.addEventListener('click', showLoginModal );
+// navLoginButton.addEventListener('click', changeNavBtnToChgUser );
+navChangeUserButton.addEventListener('click', loginViaNavBtn );
 // #endregion
 
 const userDiv = document.querySelector("#userDiv");
@@ -175,12 +182,13 @@ const checkHidden = (userArray, userIndex) => userArray[userIndex].isHidden;
 const showUsers = (userArray, activeUserIndex) => {
     if (checkIfAdmin(userArray, activeUserIndex)) { // show admin/mods everyone (if logged in user is admin)
         showAllUsers(userArray, activeUserIndex);
-        
     } else { 
         showAdmin(userArray, activeUserIndex);
         showSelf(userArray, activeUserIndex); //Not needed when active user is admin
     }
 }
+
+const clearUsers = () => userDiv.innerHTML = ``
 
 const addListenerToHideAdminBtn = (selfIndex) => {
     let hideAdminBtn = document.querySelector("#btn-hide");
