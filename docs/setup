@@ -1,0 +1,41 @@
+unzip
+open folder
+double click on the 'index.html' file to open the file in your web browser to open as is.
+
+log in using username in the username box, and your uid in the password box.
+click login to login.
+cancel will close the modal, but does not log anyone in or refresh the page.
+login will attempt to log in the user, if successful it will load up the user information they have permission to see
+    - users with the 'User' role, (actually with any non-admin non-mod role) have permission to see
+        - user information of those with the Admin and Mod roles *Note: unless hidden 
+        - thier own user information
+    - users with the Admin and Mod roles can see all users
+        - they can also hide their user information from all non-admin, non-mod roles by clicking the hide button
+            - the button then changes to a show button, which will un-hide the admin/mod 
+            - *Note: this resets to visible when the page refreshes or reloads
+There is a menu bar with a single button.
+    - when someone has closed the login modal this button is labeled 'login', and  will re-open it
+    - when someone has successfully logged in this will change to a 'change user' button
+        - clicking on 'change user' will log the current user out and open up the login modal
+---
+Any user changes require editing the files *before* opening:
+
+editing users and admin roles needs to be done in the script.js file
+    - change a user's first name, last name, and derived email information by: 
+        - calling the 'updateUserName()' function.
+            - this should be done in the noted section ( approximately line 85 ) in the file to ensure the changes take immediately
+            - this funtion needs, in order (none can be skipped): 
+                -user Index Number, first name, last name
+                    - example: updateUserName(5, 'Cole', 'Mercer');
+                    - the user's Index Number is the position in 'baseUsers' array (note, first position is index 0, second is index 1)
+                    - it is also the numver used at the end of the username 'user#'
+                        - example: user5 has an index number of 5
+    - make a user an admin
+        - call the 'makeAdmin()' function
+            - this funtion needs, in order (none can be skipped): 
+                -user Index Number, new role
+                    - the only roles supported by default are 'Admin' 'Mod' and 'User'
+                        - these ARE case-sensitive
+                        - the admin and mod user types have higher priviledges (detailed later), and have slightly different presentation
+                - example: makeAdmin(0, "Admin");
+    

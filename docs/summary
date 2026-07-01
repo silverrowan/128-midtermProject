@@ -1,10 +1,14 @@
-- [~] This project allows one of a set of hardcoded users to log into a site where they can see the information of other users and themselves.
-- [] The interface consistes of a menu bar with a "login" or "change User" button, depending on login state. 
-- [] A title reports the username of the currently logged in user.
-- [x] Which others users are shown is affected by the role of the active user, and if any of the admin users have elected to hide their information from this user. 
-- [x] Admin roles are highlighted with a green border and background for their information cards, while regular user cards have white backgrounds. 
-- [] All users will see bolded text for their own information card.
-- [] By default, regular users will see the information of all admin staff and themselves. Admin users will see everyone's information. 
-- [] Admin also have the ability to hide their information from specific users.
-- [] The login is protected from SQL injection by: ____________________________________________________
+This is a modal-based login page that will display the user information of member.
 
+Login window loads on page refresh, and when the 'Login' or 'Change User' buttons are clicked. Note the buttons do not trigger a page refresh.
+
+If the login window is closed without anyone logging in only the menubar and footer are visible.
+User information cards are only visible when a user is logged in.
+
+If the logged in user has elevated priviledges they will see the information for all users.
+They will also have a button on their profile card to hide their information from users (without elevated privileges). If clicked, this will hide their profile from members with the 'User' role, and change the button to show the profile (undoing the hide if clicked). IMPORTANT NOTE: currently login state, hide state do not persist across page reload or refresh.
+
+Users with the 'User' role can see all unhidden users with elevated priviledges, and their own information.
+
+All users will see thier profile highlighted with a thicker border of different style and color, and a subtle glow effect.
+User roles are also visually differentiated; Admin role users have a medium blue card background, Mod role cards have a light blue background, and User role cards have a white background
