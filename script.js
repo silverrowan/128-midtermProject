@@ -136,20 +136,18 @@ const navChangeUserButton = document.querySelector("#navChangeUserButton");
 // hide (or not) login/change user menu button visibility
 // note not using aria-hidden = "true" as apparently shouldn't be used 
 // with diaplay:none, which is how the hiding elements is implemented here
-const changeNavBtnToChgUser = () => {
+const changeNavBtnToLogin = () => {
     navLoginButton.className = "btn btn-primary";
     navChangeUserButton.className = "btn btn-primary hidden";
-    navLoginButton.innerText = "Change User"
 }
 
-const changeNavBtnToLogin = () => {
+const changeNavBtnToChgUser = () => {
     navLoginButton.className = "btn btn-primary hidden";
     navChangeUserButton.className = "btn btn-primary";
-    navLoginButton.innerText = "Login"
 }
 
-navLoginButton.addEventListener('click', () => changeNavBtnToChgUser );
-navChangeUserButton.addEventListener('click', () => changeNavBtnToLogin );
+navLoginButton.addEventListener('click', changeNavBtnToChgUser );
+navChangeUserButton.addEventListener('click', changeNavBtnToLogin );
 // #endregion
 
 const userDiv = document.querySelector("#userDiv");
