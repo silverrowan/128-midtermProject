@@ -1,4 +1,5 @@
 This is a modal-based login page that will display the user information of members to logged in members.
+The login modal inputs are protected from SQL injection attacks by using RegEx to limit allowed characters. Note that proper implementation with a database would be needed before it is actually vulnerable to said attack type, and that RegEx limiting is not a comprehensive defense.
 
 The Login modal loads on page refresh, and when the 'Login' or 'Change User' buttons are clicked. Note these buttons do not trigger a page refresh.
 
