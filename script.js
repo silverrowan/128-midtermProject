@@ -2,9 +2,9 @@
 // #add baseUsers array of objects & freeze
 const baseUsers = [
     { "uid": "aaa" }, //03LHN
-    { "uid": "0JDHD" }, 
-    { "uid": "65EO3" }, 
-    { "uid": "8D8WN" }, 
+    { "uid": "aaa" }, //0JDHD
+    { "uid": "aaa" }, //65EO3
+    { "uid": "aaa" }, //8D8WN
     { "uid": "aaa" }, //AC1A7
     { "uid": "DMEFU" }, 
     { "uid": "DOCMG" }, 
@@ -207,12 +207,12 @@ const showAdmin = (userArray, activeUserIndex) => {
         if ( checkIfAdmin(userArray, i) && !checkHidden(userArray, i) ) { 
             // check if the card is of an admin account and NOT hidden from users.
             // if both true, then display. Will only activate on 'user' level accounts.
-            makeCard(userArray, i, activeUserIndex); 
+            userDiv.innerHTML += makeCard(userArray, i, activeUserIndex); 
         }
     }
 }
 
-const showSelf = (userArray, activeUserIndex) => { makeCard(userArray, activeUserIndex, activeUserIndex); }
+const showSelf = (userArray, activeUserIndex) => { userDiv.innerHTML += makeCard(userArray, activeUserIndex, activeUserIndex); }
 
 // #endregion
 
