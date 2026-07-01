@@ -1,3 +1,23 @@
+//---------------------------------
+// how to use this page & what for:
+//---------------------------------
+// This is a modal-based login page that will display the user information of members to logged in members.
+
+// The Login modal loads on page refresh, and when the 'Login' or 'Change User' buttons are clicked. Note these buttons do not trigger a page refresh.
+
+// If the login modal is closed without anyone logging in only the navbar and footer are visible.
+// User information cards are only visible when a user is logged in.
+
+// If the logged in user has elevated priviledges they will see the information for all users.
+// They will also have a button on their profile card to hide their information from users (without elevated privileges). If clicked, this will hide their profile from members with the 'User' role, and change the button to 'show my profile' (undoing the hide if clicked). IMPORTANT NOTE: currently login state, hide state do not persist across page reload or refresh.
+
+// Users with the 'User' role can see all non-hidden users with elevated priviledges, and their own information.
+
+// All users will see thier profile highlighted with a thicker border of different style and color, and a subtle glow effect.
+// User roles are also visually differentiated; Admin role users have a medium blue card background, Mod role cards have a light blue background, and User role cards have a white background
+
+
+
 "use strict";
 // #add baseUsers array of objects & freeze
 const baseUsers = [
