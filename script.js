@@ -268,11 +268,11 @@ const makeCard = (userArray, cardIndex, selfIndex) => {
     //portion visible TO Admin on OWN user card
     if (selfIsAdmin && cardIsSelf) {
         let buttonText, buttonClass; 
-        selfIsHidden ? buttonText = 'show' : buttonText = 'hide';
+        selfIsHidden ? buttonText = 'Show' : buttonText = 'Hide';
         selfIsHidden ? buttonClass = 'hideAdmin btn-warning' : buttonClass = 'showAdmin btn-primary';
         output += `<hr>
             <a href="#" 
-            class="btn ${buttonClass}" id="btn-hide" userRef="${cardIndex}">${buttonText} my profile</a>`; 
+            class="btn ${buttonClass}" id="btn-hide" userRef="${cardIndex}">${buttonText} My Profile</a>`; 
         }
 
     // below portion is the same for all users
@@ -288,12 +288,12 @@ const toggleAdminVisibility = (e, activeUserIndex) => {
     
     if (adminIsHidden == false) { //if self.isHidden initially false
         baseUsers[activeUserIndex].isHidden = true; //change value of self.isHidden to true; spotty functioning if use variable adminIsHidden
-        target.innerText = 'show my profile'; //change button text
+        target.innerText = 'Show My Profile'; //change button text
         target.classList.add('btn-warning'); //add button class & therefore styling
         target.classList.remove('btn-primary'); //remove button class & therefore styling
     } else { //if self.isHidden initially true
         baseUsers[activeUserIndex].isHidden = false; //change value of self.isHidden to false; 
-        target.innerText = 'hide my profile'; //change button text
+        target.innerText = 'Hide My Profile'; //change button text
         target.classList.remove('btn-warning'); //remove button class & therefore styling
         target.classList.add('btn-primary'); //add button class & therefore styling
     }
