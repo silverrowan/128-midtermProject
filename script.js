@@ -23,61 +23,79 @@ Object.freeze(baseUsers); //note this blocks makeNewUserObj
 // #region enter user object information; includes functions: updateAllUsersAutoVaules(), ( inactive: makeRandomAlphanumeric(), makeNewUserObj(), ) updateUserAutoValues(), updateUserName(), makeAdmin()
 //available roles are: admin, mod, and user, with user having the lowest priviledges
 
-const updateAllUsersAutoValues = (userObjArray) => {
-    for (let i = 0; i < userObjArray.length; i++) {
-        updateUserAutoValues(userObjArray, i)
+const updateAllUsersAutoValues = () => {
+    for (let i = 0; i < baseUsers.length; i++) {
+        updateUserAutoValues(i)
     }
 }
 
-// const makeRandomAlphanumeric = (length) => {
-//     const charSet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-//     let output = '';
-//     for (let i = 0; i < charSet.length() ; i++) {
-//         let j = Math.floor( Math.random() * charSet.length() )
-//         output += charSet[j]
-//     }
-//     return output;
-// }
+const makeNewUserObj = ( uid ) => {
+    let i = baseUsers.length;
+    baseUsers[i] = { "uid": uid }
+}
 
-// const makeNewUserObj = ( userObjArray ) => {
-//     let i = userObjArray.length;
-//     userObjArray[i] = { "uid": makeRandomAlphanumeric(5) }
-// }
-
-const updateUserAutoValues = (userObjArray, userNumber) => {
+const updateUserAutoValues = (userNumber) => {
         let username = `user${userNumber}`;
 
-        userObjArray[userNumber].userRole = "user";
-        userObjArray[userNumber].firstName = "fName" + userNumber;
-        userObjArray[userNumber].lastName = "lName" + userNumber;
-        userObjArray[userNumber].username = username;
-        userObjArray[userNumber].email = `${username}@email.com`;
-        userObjArray[userNumber].profileImage = `images/${username}.png`;
+        baseUsers[userNumber].userRole = "User";
+        baseUsers[userNumber].firstName = "fName" + userNumber;
+        baseUsers[userNumber].lastName = "lName" + userNumber;
+        baseUsers[userNumber].username = username;
+        baseUsers[userNumber].email = `${username}@email.com`;
+        baseUsers[userNumber].profileImage = `images/${username}.png`;
 }
-const updateUserName = (userObjArray, i, firstName, lastName) => { // builds email out of name; leaves username and profileImage and role alone
-    if (firstName) { userObjArray[i].firstName = firstName };
-    if (lastName) { userObjArray[i].lastName = lastName };
-    userObjArray[i].email = `${firstName}_${lastName}@email.com`;
+const updateUserName = (i, firstName, lastName) => { // builds email out of name; leaves username and profileImage and role alone
+    baseUsers[i].firstName = firstName;
+    baseUsers[i].lastName = lastName;
+    baseUsers[i].email = `${firstName}_${lastName}@email.com`;
+}
+
+const findUserByName = (firstName, lastName) => {
+    for (let i = 0; i < baseUsers.length ; i++) {
+        if (baseUsers[i].firstName.toLowerCase() == firstName.toLowerCase() && 
+            baseUsers[i].lastName.toLowerCase() == lastName.toLowerCase()) {
+            return i;
+        } 
+    }
+    return -1;
 }
 
 //function to change a user's role
-const makeAdmin = (userArray, adminUserIndex, adminType) => {
-    userArray[adminUserIndex].userRole = adminType;
-    userArray[adminUserIndex].isHidden = false;
+const makeAdmin = (adminUserIndex, adminType) => {
+    baseUsers[adminUserIndex].userRole = adminType;
+    baseUsers[adminUserIndex].isHidden = false;
 }
 
 // Create Default Users (to match objects in baseUsers array)
-updateAllUsersAutoValues(baseUsers);
+updateAllUsersAutoValues();
+// #endregion
 
-// give users real names etc
-// updateUserName(baseUsers, i, firstName, lastName );
-
+// -----------------------------------------------
+// ANY UPDATES TO USER DATA SHOULD BE CALLED HERE
+// -----------------------------------------------
+// eg
 
 //Change 1 user's role to "admin", 2 to "mod" (moderator)
-makeAdmin(baseUsers, 0, "admin");
-makeAdmin(baseUsers, 1, "mod");
-makeAdmin(baseUsers, 2, "mod");
-// #endregion
+makeAdmin(0, "Admin");
+makeAdmin(1, "Mod");
+makeAdmin(2, "Mod");
+
+
+updateUserName(0, 'Kai', 'Vance');
+updateUserName(1, 'Tess', 'Brooks');
+updateUserName(2, 'Jude', 'Holt');
+updateUserName(4, 'Maeve', 'Finch');
+updateUserName(3, 'Dax', 'Miller');
+updateUserName(5, 'Cole', 'Mercer');
+updateUserName(6, 'Fae', 'Bowen');
+updateUserName(7, 'Opal', 'Hayes');
+updateUserName(9, 'Finn', 'Boyle');
+updateUserName(8, 'Cleo', 'Nash');
+updateUserName(11, 'Zane', 'Rossi');
+updateUserName(10, 'Bree', 'Vance');
+updateUserName(12, 'Elle', 'Kent');
+updateUserName(13, 'June', 'Rossi');
+updateUserName(14, 'Reed', 'Keller');
 
 // #region setup login modal, trigger modal on load; functions showLoginModal(), closeModal();
 // reference & create modal itself
@@ -89,7 +107,9 @@ const userPassIn = document.querySelector("#userPasswordIn");
 const loginErrorMsg = document.querySelector("#incorrect");
 //Get login form buttons & add listenters
 const enterLogin = document.querySelector("#loginModalButton");
-const cancelLogin = document.querySelector("#loginCancelButton")
+const cancelLogin = document.querySelector("#loginCancelButton");
+const cancelLoginX = document.querySelector("#modalX");
+
 
 //modal methods, initial modal trigger
 const showLoginModal = () => loginModalBS.show();
@@ -114,6 +134,8 @@ const checkUserPass = () => {
         if (baseUsers[i].username == usernameIn.value) {
             if (baseUsers[i].uid == userPassIn.value) {  
                 hideErrorMsg();
+                usernameIn.value = '';
+                userPassIn.value = '';
                 closeModal();
                 changeNavBtnToChgUser();
                 showUsers(baseUsers, i); //note i = activeUser now, b/c both ifs were true
@@ -126,6 +148,7 @@ const checkUserPass = () => {
 //attach login modal login button listener
 enterLogin.addEventListener("click", () => checkUserPass() );
 cancelLogin.addEventListener("click", closeModal);
+cancelLoginX.addEventListener("click", closeModal);
 // #endregion
 
 // #region setup navbar
@@ -163,7 +186,7 @@ const userDiv = document.querySelector("#userDiv");
 // checking if passed in index is of an admin user
 const checkIfAdmin = (userArray, userIndex) => {
     let role = userArray[userIndex].userRole;
-    if ( role == "admin"  || role == "mod" ) { 
+    if ( role == "Admin"  || role == "Mod" ) { 
         return true; 
     } else { 
         return false; 
@@ -232,15 +255,15 @@ const makeCard = (userArray, cardIndex, selfIndex) => {
 
     //build card HTML
     //below portion is the same for all users
-    let output = `<div class ="col col-s-12 col-md-6 col-lg-3 col-xl-2 mb-3" >
+    let output = `<div class ="col col-lg-6 col-xl-3 mb-3" >
         <div class="card ${userCard.userRole} ${selfClass}">
         <img src="${userCard.profileImage}" alt="profile picture of ${userCard.username}" class="card-img-top"></img>
         <div class="card-body">
-        <h5 class="card-title ${selfClass}">${userCard.username}</h5>
+        <h5 class="card-title">${userCard.username}</h5>
         <p class="card-text">
-        Full Name: ${userCard.firstName} ${userCard.lastName}<br>
-        email: ${userCard.email}<br>
-        role: ${userCard.userRole}<br>`
+        <b>Full Name:</b> ${userCard.firstName} ${userCard.lastName}<br>
+        <b>Email:</b> ${userCard.email}<br>
+        <b>Role:</b> ${userCard.userRole}<br>`
 
     //portion visible TO Admin on OWN user card
     if (selfIsAdmin && cardIsSelf) {
@@ -266,13 +289,13 @@ const toggleAdminVisibility = (e, activeUserIndex) => {
     if (adminIsHidden == false) { //if self.isHidden initially false
         baseUsers[activeUserIndex].isHidden = true; //change value of self.isHidden to true; spotty functioning if use variable adminIsHidden
         target.innerText = 'show my profile'; //change button text
-        target.classList.add('hideAdmin', 'btn-warning'); //add button classes & therefore styling
-        target.classList.remove('showAdmin', 'btn-primary'); //remove button classes & therefore styling
+        target.classList.add('btn-warning'); //add button class & therefore styling
+        target.classList.remove('btn-primary'); //remove button class & therefore styling
     } else { //if self.isHidden initially true
         baseUsers[activeUserIndex].isHidden = false; //change value of self.isHidden to false; 
         target.innerText = 'hide my profile'; //change button text
-        target.classList.remove('hideAdmin', 'btn-warning'); //add button classes & therefore styling
-        target.classList.add('showAdmin', 'btn-primary'); //remove button classes & therefore styling
+        target.classList.remove('btn-warning'); //remove button class & therefore styling
+        target.classList.add('btn-primary'); //add button class & therefore styling
     }
 }
 // #endregion

@@ -6,16 +6,17 @@ body {
     display: none !important;
 }
 
-.admin, .mod, .user {
+.Admin, .Mod, .User {
     border: 2px solid rgb(46, 94, 165);
-    border-radius: 8px;
+    border-radius: 12px;
+    overflow: hidden;
 }
-.admin {
+.Admin {
     border-color: rgb(14, 62, 134);
     background-color: rgb(78, 131, 211);
 }
 
-.mod {
+.Mod {
     background-color: rgb(175, 205, 230);
 }
 
@@ -31,14 +32,16 @@ hr {
 .card.self {
     box-shadow: 
     /* actually a glow */
-    0px 0px 15px rgb(16, 155, 235,0.5),
+    0px 0px 15px #d7ad2d80,
     /* same shadow as other cards */
     0px 1rem 1.5rem -0.5rem hsla(217, 100%, 24%, 0.25);
 
 }
 
 .self {
-    font-weight: bold;
+    border-style: outset;
+    border-width: 5px;
+    border-color: #d7ad2d;
 }
 
 nav {
@@ -49,6 +52,8 @@ nav {
 .btn-primary {
     --bs-btn-bg: rgb(28, 100, 207);
     --bs-btn-border-color: rgb(14, 62, 134);
-    --bs-btn-hover-bg: rgb(78, 131, 211);
+    --bs-btn-hover-bg: rgb(14, 62, 134) ;
+    /* --bs-btn-hover-bg: rgb(78, 131, 211) ; */
     --bs-btn-active-bg: rgb(175, 205, 230);
+    /* --bs-btn-active-bg: rgb(175, 205, 230); */
 }
